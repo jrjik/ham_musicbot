@@ -4,13 +4,13 @@ import logging
 from typing import TYPE_CHECKING
 
 import spotipy
+from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
 from hammett.core.handlers import register_button_handler
 from spotipy import SpotifyException
 from spotipy.oauth2 import SpotifyClientCredentials
 
-from hammett.conf import settings
 from database import get_user_list
 from screens.base import BaseScreen
 
