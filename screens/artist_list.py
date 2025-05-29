@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
+
 class ArtistListShow(BaseScreen):
     """Класс для вывода списка исполнителей."""
 

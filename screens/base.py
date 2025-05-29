@@ -1,4 +1,5 @@
 """Модуль содержит базовые модули для экранов."""
+
 from typing import TYPE_CHECKING
 
 from hammett.core import Button, Screen
@@ -10,6 +11,7 @@ if TYPE_CHECKING:
     from hammett.types import Keyboard
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
+
 
 class BaseScreen(Screen):
     """В классе содержится кнопка возврата на StartScreen."""

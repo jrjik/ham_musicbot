@@ -40,16 +40,16 @@ class StartScreen(StartMixin):
         return [
             [
                 Button(
-                    'Поиск релизов',
-                    ArtistSearch,
-                    source_type=SourceTypes.MOVE_SOURCE_TYPE,
+                    'Создать Список исполнителей',
+                    ArtistListEdit,
+                    source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
                 ),
             ],
             [
                 Button(
-                    'Создать Список исполнителей',
-                    ArtistListEdit,
-                    source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
+                    'Поиск релизов',
+                    ArtistSearch,
+                    source_type=SourceTypes.MOVE_SOURCE_TYPE,
                 ),
             ],
             [

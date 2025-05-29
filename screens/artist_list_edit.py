@@ -38,14 +38,6 @@ class ArtistListEdit(BaseScreen, RouteMixin):
     ) -> 'State':
         """Обработчик кнопки для записи списка исполнителей."""
         if update.message is None:
-            await self.render(
-                update,
-                context,
-                config=RenderConfig(
-                    description='Не удалось обработать сообщение',
-                    keyboard=[[self._get_back_button()]],
-                ),
-            )
             return DEFAULT_STATE
 
         user_id = update.effective_user.id

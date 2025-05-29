@@ -15,6 +15,26 @@ def create_connection() -> Connection:
         logger.exception('Ошибка подключения')
     return conn
 
+def get_user_list(user_id: int) -> list[str]:
+    """Функция запроса списка исполнителей из базы."""
+    conn = create_connection()
+    if not conn:
+        return []
+
+    try:
+        cursor = conn.cursor()
+        cursor.execute('SELECT items FROM user_lists WHERE user_id = ?', (user_id,))
+        result = cursor.fetchone()
+
+        if result:
+            return result[0].split(', ')
+        return []
+
+    except Error:
+        logger.exception('Ошибка при чтении')
+        return []
+    finally:
+        conn.close()
 
 def init_db() -> None:
     """Функция инициализации базы и создание таблицы."""
@@ -54,25 +74,6 @@ def save_user_list(user_id: int, items: list) -> None:
             conn.close()
 
 
-def get_user_list(user_id: int) -> list[str]:
-    """Функция запроса списка исполнителей из базы."""
-    conn = create_connection()
-    if not conn:
-        return []
 
-    try:
-        cursor = conn.cursor()
-        cursor.execute('SELECT items FROM user_lists WHERE user_id = ?', (user_id,))
-        result = cursor.fetchone()
-
-        if result:
-            return result[0].split(', ')
-        return []
-
-    except Error:
-        logger.exception('Ошибка при чтении')
-        return []
-    finally:
-        conn.close()
 
 init_db()

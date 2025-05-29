@@ -10,7 +10,7 @@ from hammett.core.handlers import register_button_handler
 from spotipy import SpotifyException
 from spotipy.oauth2 import SpotifyClientCredentials
 
-import settings
+from hammett.conf import settings
 from database import get_user_list
 from screens.base import BaseScreen
 
@@ -64,23 +64,6 @@ class ArtistSearch(BaseScreen):
 
         return config
 
-    @register_button_handler
-    async def search_releases_handler(
-        self: 'Self',
-        update: 'Update | None',
-        context: 'CallbackContext[BT, UD, CD, BD]',
-    ) -> 'State':
-        """Обработчик на кнопку для поиска релизов.
-        После нажатия подгружает список из базы
-        и передает в функцию для парсинга.
-        """
-        user_id = update.effective_user.id
-        artists = get_user_list(user_id)
-        results = await self._fetch_spotify_data(artists, '2023-11-10')
-        context.user_data['spotify_results'] = results
-
-        return await self.move(update, context)
-
     async def _fetch_spotify_data(
         self: 'Self',
         artists: 'list',
@@ -130,3 +113,22 @@ class ArtistSearch(BaseScreen):
                 message += f'   Ссылка: {release['external_urls']['spotify']}\n\n'
 
         return message
+
+    @register_button_handler
+    async def search_releases_handler(
+        self: 'Self',
+        update: 'Update | None',
+        context: 'CallbackContext[BT, UD, CD, BD]',
+    ) -> 'State':
+        """Обработчик на кнопку для поиска релизов.
+        После нажатия подгружает список из базы
+        и передает в функцию для парсинга.
+        """
+        user_id = update.effective_user.id
+        artists = get_user_list(user_id)
+        results = await self._fetch_spotify_data(artists, '2023-11-10')
+        context.user_data['spotify_results'] = results
+
+        return await self.move(update, context)
+
+
