@@ -1,4 +1,5 @@
 """Модуль содержит реализацию стартвого экрана с переходами."""
+
 from typing import TYPE_CHECKING
 
 from hammett.core import Button

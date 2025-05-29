@@ -1,6 +1,6 @@
 """Модуль содержит реализацию поиска релизов по списку исполнителей."""
+
 import logging
-import os
 from typing import TYPE_CHECKING
 
 import spotipy
@@ -10,6 +10,7 @@ from hammett.core.handlers import register_button_handler
 from spotipy import SpotifyException
 from spotipy.oauth2 import SpotifyClientCredentials
 
+import settings
 from database import get_user_list
 from screens.base import BaseScreen
 
@@ -86,8 +87,8 @@ class ArtistSearch(BaseScreen):
         target_date: 'str',
     ) -> dict:
         """Функция парсинга релизов по списку исполнителей."""
-        client_id = os.getenv('SPOTIFY_CLIENT_ID')
-        client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
+        client_id = settings.SPOTIFY_CLIENT_ID
+        client_secret = settings.SPOTIFY_CLIENT_SECRET
 
         auth_manager = SpotifyClientCredentials(
             client_id=client_id, client_secret=client_secret,

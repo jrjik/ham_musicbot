@@ -35,10 +35,7 @@ def init_db() -> None:
             conn.close()
 
 
-def save_user_list(
-    user_id: int,
-    items: list,
-) -> None:
+def save_user_list(user_id: int, items: list) -> None:
     """Функция сохранения списка исполнителей в базу."""
     conn = create_connection()
     if conn:

@@ -1,4 +1,5 @@
 """Модуль содержит реализацию экрана с редактированием списка артистов."""
+
 from typing import TYPE_CHECKING
 
 from hammett.core.constants import DEFAULT_STATE, RenderConfig
@@ -12,7 +13,7 @@ from screens.base import BaseScreen
 if TYPE_CHECKING:
     from typing import Self
 
-    from hammett.types import Keyboard, State
+    from hammett.types import State
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
@@ -29,14 +30,6 @@ class ArtistListEdit(BaseScreen, RouteMixin):
 
     description = ARTISTLIST_SCREEN_DESCRIPTION
 
-    async def add_default_keyboard(
-        self: 'Self',
-        _update: 'Update | None',
-        _context: 'CallbackContext[BT, UD, CD, BD]',
-    ) -> 'Keyboard':
-        """Метод добавляет кнопку возврата в главное меню на экран."""
-        return [[self._get_back_button()]]
-
     @register_typing_handler
     async def handle_text_(
         self: 'Self',
@@ -45,7 +38,15 @@ class ArtistListEdit(BaseScreen, RouteMixin):
     ) -> 'State':
         """Обработчик кнопки для записи списка исполнителей."""
         if update.message is None:
-            return 'Не удалось обработать сообщение'
+            await self.render(
+                update,
+                context,
+                config=RenderConfig(
+                    description='Не удалось обработать сообщение',
+                    keyboard=[[self._get_back_button()]],
+                ),
+            )
+            return DEFAULT_STATE
 
         user_id = update.effective_user.id
         user_text = update.message.text
