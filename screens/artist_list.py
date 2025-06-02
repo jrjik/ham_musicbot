@@ -1,12 +1,13 @@
 """Модуль содержит реализацию экрана."""
-
-from typing import TYPE_CHECKING
+import json
+from typing import TYPE_CHECKING, Any
 
 from hammett.core import Button
-from hammett.core.constants import SourceTypes
+from hammett.core.constants import RenderConfig, SourceTypes
 
 from database import get_user_list
-from screens.artist_list_edit import ArtistListEdit
+from screens.add_artist import ArtistAdd
+from screens.artist import Artist
 from screens.base import BaseScreen
 
 if TYPE_CHECKING:
@@ -17,25 +18,47 @@ if TYPE_CHECKING:
     from telegram.ext._utils.types import BD, BT, CD, UD
 
 
-class ArtistListSc(BaseScreen):
+class ArtistList(BaseScreen):
     """Класс содержит реализацию экрана с выводом текущего списка исполнителей
     и редактированием существующего.
     """
 
-    async def get_description(
+    cover = 'images/image1.jpg'
+
+    async def get_config(
         self: 'Self',
-        update: 'Update | None',
+        _update: 'Update | None',
         _context: 'CallbackContext[BT, UD, CD, BD]',
-    ) -> str:
-        """Метод возвращает список исполнителей."""
-        user_id = update.effective_user.id
+        **_kwargs: 'Any',
+    ) -> RenderConfig:
+        """Метод для динамической отрисовки кнопок-исполнителей."""
+        user_id = _update.effective_user.id
         artists = get_user_list(user_id)
 
-        if not artists:
-            return '🎤 Ваш список исполнителей пуст'
+        config = RenderConfig(
+            description='🎤 Ваш список исполнителей:',
+        )
 
-        artists_list = '\n'.join(f'▫️ {artist}' for artist in artists)
-        return f'🎤 Ваши исполнители:\n\n{artists_list}\n\nВсего: {len(artists)}'
+        artist_buttons = [
+            [Button(
+                artist,
+                Artist,
+                source_type=SourceTypes.MOVE_SOURCE_TYPE,
+                payload=json.dumps({'name': artist}),
+            )]
+            for artist in artists
+        ]
+
+        config.keyboard = [
+            *artist_buttons,
+            [Button(
+                '➕ Добавить исполнителя',
+                ArtistAdd,
+                source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
+            )],
+        ]
+
+        return config
 
     async def add_default_keyboard(
         self: 'Self',
@@ -46,12 +69,9 @@ class ArtistListSc(BaseScreen):
         return [
             [
                 Button(
-                    'Добавить список',
-                    ArtistListEdit,
+                    'Добавить исполнителя',
+                    ArtistAdd,
                     source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
                 ),
-            ],
-            [
-                self._get_back_button(),
             ],
         ]

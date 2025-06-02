@@ -5,10 +5,11 @@ from hammett.core.constants import DEFAULT_STATE
 from hammett.core.persistence import RedisPersistence
 
 from constants import INPUT_STATE
-from screens.artist_list import ArtistListSc
-from screens.artist_list_edit import ArtistListEdit
+from screens.add_artist import ArtistAdd
+from screens.artist import Artist
+from screens.artist_list import ArtistList
+from screens.main_menu import StartScreen
 from screens.search_releases import ArtistSearch
-from screens.start_screen import StartScreen
 
 
 def main() -> None:
@@ -18,8 +19,8 @@ def main() -> None:
         entry_point=StartScreen,
         persistence=RedisPersistence(),
         states={
-            DEFAULT_STATE: {StartScreen, ArtistSearch, ArtistListSc},
-            INPUT_STATE: {ArtistListEdit, StartScreen},
+            DEFAULT_STATE: {StartScreen, ArtistSearch, ArtistList, Artist},
+            INPUT_STATE: {ArtistAdd, StartScreen, ArtistList},
         },
     )
     bot.run()

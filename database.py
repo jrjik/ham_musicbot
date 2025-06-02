@@ -27,7 +27,7 @@ def get_user_list(user_id: int) -> list[str]:
         result = cursor.fetchone()
 
         if result:
-            return result[0].split(', ')
+            return [item.strip() for item in result[0].split(',')]
         return []
 
     except Error:
@@ -72,8 +72,5 @@ def save_user_list(user_id: int, items: list) -> None:
             logger.info('Ошибка при сохранении: %s', e)
         finally:
             conn.close()
-
-
-
 
 init_db()

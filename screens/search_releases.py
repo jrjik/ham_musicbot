@@ -59,7 +59,7 @@ class ArtistSearch(BaseScreen):
                 ),
             ])
 
-        keyboard.append([self._get_back_button()])
+        keyboard.append([self._get_main_menu_button()])
         config.keyboard = keyboard
 
         return config
@@ -131,4 +131,24 @@ class ArtistSearch(BaseScreen):
 
         return await self.move(update, context)
 
+class SpotifyArtistMixin:
+    """Класс для поиска информации для карточки исполнителя."""
 
+    async def _fetch_artist_info(self, artist_name: str) -> dict | None:
+        """Метод для поиска информации об исполнителе."""
+        sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
+            client_id=settings.SPOTIFY_CLIENT_ID,
+            client_secret=settings.SPOTIFY_CLIENT_SECRET,
+        ))
+        results = sp.search(q=artist_name, type='artist', limit=1)
+        items = results.get('artists', {}).get('items')
+        if not items:
+            return None
+        artist = items[0]
+        return {
+            'name': artist['name'],
+            'genres': artist['genres'],
+            'popularity': artist['popularity'],
+            'url': artist['external_urls']['spotify'],
+            'image_url': artist['images'][0]['url'] if artist.get('images') else None,
+        }

@@ -6,7 +6,7 @@ from hammett.core import Button
 from hammett.core.constants import SourceTypes
 from hammett.core.mixins import StartMixin
 
-from screens.artist_list import ArtistListSc
+from screens.artist_list import ArtistList
 from screens.search_releases import ArtistSearch
 
 if TYPE_CHECKING:
@@ -40,7 +40,7 @@ class StartScreen(StartMixin):
             [
                 Button(
                     'Мои исполнители',
-                    ArtistListSc,
+                    ArtistList,
                     source_type=SourceTypes.MOVE_SOURCE_TYPE,
                 ),
             ],
