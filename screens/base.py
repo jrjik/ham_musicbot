@@ -12,27 +12,26 @@ if TYPE_CHECKING:
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
+import screens
+
 
 class BaseScreen(Screen):
     """В классе содержится кнопка возврата на StartScreen."""
 
     @staticmethod
     def _get_main_menu_button() -> 'Button':
-        from screens.main_menu import StartScreen
 
         return Button(
             '⬅️ В главное меню',
-            source=StartScreen,
+            source=screens.main_menu.MainMenu,
             source_type=SourceTypes.MOVE_SOURCE_TYPE,
         )
 
     @staticmethod
-    def _get_back_button() -> 'Button':
-        from screens.artist_list import ArtistList
-
+    def _get_artist_list_button() -> 'Button':
         return Button(
             '⬅️ Назад',
-            source=ArtistList,
+            source=screens.artist_list.ArtistList,
             source_type=SourceTypes.MOVE_SOURCE_TYPE,
         )
 
@@ -45,10 +44,10 @@ class BaseScreen(Screen):
         return [[self._get_main_menu_button()]]
 
 
-    async def add_back_keyboard(
+    async def add_artist_list_keyboard(
         self: 'Self',
         _update: 'Update | None',
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'Keyboard':
         """Метод добавляет кнопку возврата назад."""
-        return [[self._get_back_button()]]
+        return [[self._get_artist_list_button()]]

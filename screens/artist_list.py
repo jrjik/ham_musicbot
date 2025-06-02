@@ -2,6 +2,7 @@
 import json
 from typing import TYPE_CHECKING, Any
 
+from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
 
@@ -13,7 +14,6 @@ from screens.base import BaseScreen
 if TYPE_CHECKING:
     from typing import Self
 
-    from hammett.types import Keyboard
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
@@ -23,7 +23,7 @@ class ArtistList(BaseScreen):
     и редактированием существующего.
     """
 
-    cover = 'images/image1.jpg'
+    cover = settings.MEDIA_ROOT / 'image1.jpg'
 
     async def get_config(
         self: 'Self',
@@ -55,23 +55,10 @@ class ArtistList(BaseScreen):
                 '➕ Добавить исполнителя',
                 ArtistAdd,
                 source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
-            )],
+            ),
+                self._get_main_menu_button(),
+            ],
+
         ]
 
         return config
-
-    async def add_default_keyboard(
-        self: 'Self',
-        _update: 'Update | None',
-        _context: 'CallbackContext[BT, UD, CD, BD]',
-    ) -> 'Keyboard':
-        """Метод добавляет клавиатуру с кнопками на экран."""
-        return [
-            [
-                Button(
-                    'Добавить исполнителя',
-                    ArtistAdd,
-                    source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
-                ),
-            ],
-        ]

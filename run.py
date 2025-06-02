@@ -5,22 +5,18 @@ from hammett.core.constants import DEFAULT_STATE
 from hammett.core.persistence import RedisPersistence
 
 from constants import INPUT_STATE
-from screens.add_artist import ArtistAdd
-from screens.artist import Artist
-from screens.artist_list import ArtistList
-from screens.main_menu import StartScreen
-from screens.search_releases import ArtistSearch
+from screens import Artist, ArtistAdd, ArtistList, ArtistSearch, MainMenu
 
 
 def main() -> None:
     """Запуск бота."""
     bot = Bot(
         'Ham_MusicBot',
-        entry_point=StartScreen,
+        entry_point=MainMenu,
         persistence=RedisPersistence(),
         states={
-            DEFAULT_STATE: {StartScreen, ArtistSearch, ArtistList, Artist},
-            INPUT_STATE: {ArtistAdd, StartScreen, ArtistList},
+            DEFAULT_STATE: {MainMenu, ArtistSearch, ArtistList, Artist},
+            INPUT_STATE: {ArtistAdd, MainMenu, ArtistList},
         },
     )
     bot.run()

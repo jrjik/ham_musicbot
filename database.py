@@ -6,6 +6,7 @@ from sqlite3 import Connection, Error
 
 logger = logging.getLogger(__name__)
 
+
 def create_connection() -> Connection:
     """Функция подключения к базе."""
     conn = None

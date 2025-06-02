@@ -3,16 +3,13 @@
 import logging
 from typing import TYPE_CHECKING
 
-import spotipy
-from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
 from hammett.core.handlers import register_button_handler
-from spotipy import SpotifyException
-from spotipy.oauth2 import SpotifyClientCredentials
 
 from database import get_user_list
 from screens.base import BaseScreen
+from spotify import API_CLIENT
 
 if TYPE_CHECKING:
     from typing import Any, Self
@@ -70,32 +67,9 @@ class ArtistSearch(BaseScreen):
         target_date: 'str',
     ) -> dict:
         """Функция парсинга релизов по списку исполнителей."""
-        client_id = settings.SPOTIFY_CLIENT_ID
-        client_secret = settings.SPOTIFY_CLIENT_SECRET
+        releases = API_CLIENT.fetch_releases_by_date(artists, target_date)
 
-        auth_manager = SpotifyClientCredentials(
-            client_id=client_id, client_secret=client_secret,
-        )
-        sp = spotipy.Spotify(auth_manager=auth_manager)
-
-        results = {}
-        for artist in artists:
-            try:
-                query = f'artist:{artist} year:2023'
-                releases = sp.search(q=query, type='album', limit=10)
-
-                matched_releases = [
-                    item
-                    for item in releases['albums']['items']
-                    if item['release_date'] == target_date
-                ]
-
-                if matched_releases:
-                    results[artist] = matched_releases
-            except SpotifyException:
-                logger.exception('Ошибка подключения к Spotify API')
-
-        return results
+        return releases
 
     def _format_results(
         self: 'Self',
@@ -120,8 +94,7 @@ class ArtistSearch(BaseScreen):
         update: 'Update | None',
         context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'State':
-        """Обработчик на кнопку для поиска релизов.
-        После нажатия подгружает список из базы
+        """Обработчик на кнопку для поиска релизов. После нажатия подгружает список из базы
         и передает в функцию для парсинга.
         """
         user_id = update.effective_user.id
@@ -136,19 +109,5 @@ class SpotifyArtistMixin:
 
     async def _fetch_artist_info(self, artist_name: str) -> dict | None:
         """Метод для поиска информации об исполнителе."""
-        sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
-            client_id=settings.SPOTIFY_CLIENT_ID,
-            client_secret=settings.SPOTIFY_CLIENT_SECRET,
-        ))
-        results = sp.search(q=artist_name, type='artist', limit=1)
-        items = results.get('artists', {}).get('items')
-        if not items:
-            return None
-        artist = items[0]
-        return {
-            'name': artist['name'],
-            'genres': artist['genres'],
-            'popularity': artist['popularity'],
-            'url': artist['external_urls']['spotify'],
-            'image_url': artist['images'][0]['url'] if artist.get('images') else None,
-        }
+        artist_info = API_CLIENT.get_artist_card_data(artist_name)
+        return artist_info

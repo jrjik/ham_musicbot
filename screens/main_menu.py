@@ -2,12 +2,12 @@
 
 from typing import TYPE_CHECKING
 
+from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import SourceTypes
 from hammett.core.mixins import StartMixin
 
-from screens.artist_list import ArtistList
-from screens.search_releases import ArtistSearch
+from screens import artist_list, search_releases
 
 if TYPE_CHECKING:
     from typing import Self
@@ -25,8 +25,10 @@ START_SCREEN_DESCRIPTION = (
 )
 
 
-class StartScreen(StartMixin):
+class MainMenu(StartMixin):
     """Класс предоставляет стартовый экран с переходами на другие."""
+
+    cover = settings.MEDIA_ROOT / 'image1.jpg'
 
     description = START_SCREEN_DESCRIPTION
 
@@ -40,14 +42,14 @@ class StartScreen(StartMixin):
             [
                 Button(
                     'Мои исполнители',
-                    ArtistList,
+                    artist_list.ArtistList,
                     source_type=SourceTypes.MOVE_SOURCE_TYPE,
                 ),
             ],
             [
                 Button(
                     'Поиск релизов',
-                    ArtistSearch,
+                    search_releases.ArtistSearch,
                     source_type=SourceTypes.MOVE_SOURCE_TYPE,
                 ),
             ],

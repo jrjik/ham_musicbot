@@ -7,6 +7,7 @@ from hammett.core import Button
 from hammett.core.constants import RenderConfig
 from hammett.core.handlers import register_button_handler
 
+import screens
 from database import get_user_list, save_user_list
 from screens.base import BaseScreen
 from screens.search_releases import SpotifyArtistMixin
@@ -48,7 +49,7 @@ class Artist(BaseScreen, SpotifyArtistMixin):
             keyboard=[
                 [Button('🗑 Удалить исполнителя', source=self._delete_artist,
                         payload=json.dumps({'name': artist_name}))],
-                *await self.add_back_keyboard(_update, _context),
+                *await self.add_artist_list_keyboard(_update, _context),
             ],
             cover=artist_info.get('image_url'),
         )
@@ -68,5 +69,4 @@ class Artist(BaseScreen, SpotifyArtistMixin):
             current_list.remove(artist_name)
             save_user_list(user_id, current_list)
 
-        from screens.artist_list import ArtistList
-        return await ArtistList().move(update, context)
+        return await screens.artist_list.ArtistList().move(update, context)
