@@ -3,6 +3,7 @@
 import logging
 from typing import TYPE_CHECKING
 
+from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
 from hammett.core.handlers import register_button_handler
@@ -23,6 +24,8 @@ logger = logging.getLogger(__name__)
 
 class ArtistSearch(BaseScreen):
     """Класс для поиска релизов по любимым исполнителям пользователя."""
+
+    cover = settings.MEDIA_ROOT / 'image1.jpg'
 
     async def get_config(
         self: 'Self',
@@ -61,16 +64,6 @@ class ArtistSearch(BaseScreen):
 
         return config
 
-    async def _fetch_spotify_data(
-        self: 'Self',
-        artists: 'list',
-        target_date: 'str',
-    ) -> dict:
-        """Функция парсинга релизов по списку исполнителей."""
-        releases = API_CLIENT.fetch_releases_by_date(artists, target_date)
-
-        return releases
-
     def _format_results(
         self: 'Self',
         results: dict[str],
@@ -99,15 +92,8 @@ class ArtistSearch(BaseScreen):
         """
         user_id = update.effective_user.id
         artists = get_user_list(user_id)
-        results = await self._fetch_spotify_data(artists, '2023-11-10')
+        results = API_CLIENT.fetch_releases_by_date(artists, '2023-11-10')
         context.user_data['spotify_results'] = results
 
         return await self.move(update, context)
 
-class SpotifyArtistMixin:
-    """Класс для поиска информации для карточки исполнителя."""
-
-    async def _fetch_artist_info(self, artist_name: str) -> dict | None:
-        """Метод для поиска информации об исполнителе."""
-        artist_info = API_CLIENT.get_artist_card_data(artist_name)
-        return artist_info

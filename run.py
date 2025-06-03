@@ -5,7 +5,7 @@ from hammett.core.constants import DEFAULT_STATE
 from hammett.core.persistence import RedisPersistence
 
 from constants import INPUT_STATE
-from screens import Artist, ArtistAdd, ArtistList, ArtistSearch, MainMenu
+from screens import AdminPanel, Artist, ArtistAdd, ArtistList, ArtistSearch, MainMenu
 
 
 def main() -> None:
@@ -15,7 +15,7 @@ def main() -> None:
         entry_point=MainMenu,
         persistence=RedisPersistence(),
         states={
-            DEFAULT_STATE: {MainMenu, ArtistSearch, ArtistList, Artist},
+            DEFAULT_STATE: {MainMenu, ArtistSearch, ArtistList, Artist, AdminPanel},
             INPUT_STATE: {ArtistAdd, MainMenu, ArtistList},
         },
     )

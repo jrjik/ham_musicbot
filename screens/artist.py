@@ -10,7 +10,7 @@ from hammett.core.handlers import register_button_handler
 import screens
 from database import get_user_list, save_user_list
 from screens.base import BaseScreen
-from screens.search_releases import SpotifyArtistMixin
+from spotify import API_CLIENT
 
 if TYPE_CHECKING:
     from typing import Any, Self
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from telegram.ext._utils.types import BD, BT, CD, UD
 
 
-class Artist(BaseScreen, SpotifyArtistMixin):
+class Artist(BaseScreen):
     """Экран карточки с информацией об артисте."""
 
     async def get_config(
@@ -33,7 +33,7 @@ class Artist(BaseScreen, SpotifyArtistMixin):
         artist_data_raw = await self.get_payload(_update, _context)
         artist_name = json.loads(artist_data_raw).get('name')
 
-        artist_info = await self._fetch_artist_info(artist_name)
+        artist_info = API_CLIENT.get_artist_card_data(artist_name)
         if not artist_info:
             return RenderConfig(description='Не удалось найти информацию об артисте.')
 
@@ -60,6 +60,7 @@ class Artist(BaseScreen, SpotifyArtistMixin):
         update: 'Update | None',
         context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'State':
+        """Метод для удаления артиста из списка."""
         user_id = update.effective_user.id
         artist_data = await self.get_payload(update, context)
         artist_name = json.loads(artist_data).get('name')

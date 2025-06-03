@@ -55,9 +55,9 @@ class ArtistList(BaseScreen):
                 '➕ Добавить исполнителя',
                 ArtistAdd,
                 source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
-            ),
-                self._get_main_menu_button(),
-            ],
+            )],
+                [self._get_main_menu_button()],
+
 
         ]
 
