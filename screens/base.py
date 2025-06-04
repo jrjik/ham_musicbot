@@ -2,6 +2,7 @@
 
 from typing import TYPE_CHECKING
 
+from hammett.conf import settings
 from hammett.core import Button, Screen
 from hammett.core.constants import SourceTypes
 
@@ -17,6 +18,8 @@ import screens
 
 class BaseScreen(Screen):
     """В классе содержится кнопка возврата на StartScreen."""
+
+    cover = settings.MEDIA_ROOT / 'image1.jpg'
 
     @staticmethod
     def _get_main_menu_button() -> 'Button':

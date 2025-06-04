@@ -11,6 +11,7 @@ from settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
 
 logger = logging.getLogger(__name__)
 
+
 class SpotifyAPIClient:
     """Клиент для взаимодействия с API Spotify."""
 

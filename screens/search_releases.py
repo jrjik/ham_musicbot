@@ -3,7 +3,6 @@
 import logging
 from typing import TYPE_CHECKING
 
-from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
 from hammett.core.handlers import register_button_handler
@@ -25,8 +24,6 @@ logger = logging.getLogger(__name__)
 class ArtistSearch(BaseScreen):
     """Класс для поиска релизов по любимым исполнителям пользователя."""
 
-    cover = settings.MEDIA_ROOT / 'image1.jpg'
-
     async def get_config(
         self: 'Self',
         update: 'Update | None',
@@ -37,17 +34,15 @@ class ArtistSearch(BaseScreen):
         user_id = update.effective_user.id
         artists = get_user_list(user_id)
 
-        config = RenderConfig()
-
         if not artists:
-            config.description = (
+            description = (
                 '❌ У вас ещё нет списка исполнителей\n\n'
                 'Пожалуйста, сначала создайте список через меню'
             )
         elif 'spotify_results' in context.user_data:
-            config.description = self._format_results(context.user_data['spotify_results'])
+            description = self._format_results(context.user_data['spotify_results'])
         else:
-            config.description = 'Нажмите кнопку для поиска релизов'
+            description = 'Нажмите кнопку для поиска релизов'
 
         keyboard = []
         if artists:
@@ -60,9 +55,11 @@ class ArtistSearch(BaseScreen):
             ])
 
         keyboard.append([self._get_main_menu_button()])
-        config.keyboard = keyboard
 
-        return config
+        return RenderConfig(
+            description=description,
+            keyboard=keyboard,
+        )
 
     def _format_results(
         self: 'Self',

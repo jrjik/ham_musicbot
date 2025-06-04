@@ -6,7 +6,6 @@ from hammett.core.constants import DEFAULT_STATE, RenderConfig
 from hammett.core.handlers import register_typing_handler
 from hammett.core.mixins import RouteMixin
 
-import settings
 from constants import INPUT_STATE
 from database import get_user_list, save_user_list
 from screens.base import BaseScreen
@@ -23,10 +22,9 @@ ARTISTLIST_SCREEN_DESCRIPTION = (
     '\n'
 )
 
+
 class ArtistAdd(BaseScreen, RouteMixin):
     """Класс для редактирования списка исполнителей."""
-
-    cover = settings.MEDIA_ROOT / 'image1.jpg'
 
     description = ARTISTLIST_SCREEN_DESCRIPTION
 

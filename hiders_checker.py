@@ -1,4 +1,5 @@
 """Модуль содержит кастомные Hider-проверки для управления доступом к кнопкам."""
+
 from typing import TYPE_CHECKING
 
 from hammett.conf import settings

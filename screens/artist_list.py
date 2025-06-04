@@ -1,8 +1,8 @@
 """Модуль содержит реализацию экрана."""
+
 import json
 from typing import TYPE_CHECKING, Any
 
-from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
 
@@ -23,8 +23,6 @@ class ArtistList(BaseScreen):
     и редактированием существующего.
     """
 
-    cover = settings.MEDIA_ROOT / 'image1.jpg'
-
     async def get_config(
         self: 'Self',
         _update: 'Update | None',
@@ -40,25 +38,27 @@ class ArtistList(BaseScreen):
         )
 
         artist_buttons = [
-            [Button(
-                artist,
-                Artist,
-                source_type=SourceTypes.MOVE_SOURCE_TYPE,
-                payload=json.dumps({'name': artist}),
-            )]
+            [
+                Button(
+                    artist,
+                    Artist,
+                    source_type=SourceTypes.MOVE_SOURCE_TYPE,
+                    payload=json.dumps({'name': artist}),
+            ),
+        ]
             for artist in artists
         ]
 
         config.keyboard = [
             *artist_buttons,
-            [Button(
-                '➕ Добавить исполнителя',
-                ArtistAdd,
-                source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
-            )],
+            [
+                Button(
+                    '➕ Добавить исполнителя',
+                    ArtistAdd,
+                    source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
+            ),
+            ],
                 [self._get_main_menu_button()],
-
-
         ]
 
         return config
