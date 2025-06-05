@@ -8,7 +8,8 @@ from hammett.core.constants import RenderConfig
 from hammett.core.handlers import register_button_handler
 
 import screens
-from database import get_user_list, save_user_list
+
+from backend.users.services import get_user_list, save_user_list
 from screens.base import BaseScreen
 from spotify import API_CLIENT
 
@@ -65,9 +66,9 @@ class Artist(BaseScreen):
         artist_data = await self.get_payload(update, context)
         artist_name = json.loads(artist_data).get('name')
 
-        current_list = get_user_list(user_id)
+        current_list = await get_user_list(user_id)
         if artist_name in current_list:
             current_list.remove(artist_name)
-            save_user_list(user_id, current_list)
+            await save_user_list(user_id, current_list)
 
         return await screens.artist_list.ArtistList().move(update, context)

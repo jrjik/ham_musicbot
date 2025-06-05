@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 class MaintenanceScreen(BaseScreen):
     """Экран, отображаемый в режиме обслуживания."""
 
-    cover = settings.MEDIA_ROOT / 'image1.jpg'
+    cover = settings.MEDIA_ROOT / 'maintenance_cover.jpg'
 
     description = 'Бот находится на техническом обслуживании.\nПопробуйте позже.'
 

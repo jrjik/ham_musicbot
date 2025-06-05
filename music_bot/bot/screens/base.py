@@ -6,6 +6,7 @@ from hammett.conf import settings
 from hammett.core import Button, Screen
 from hammett.core.constants import SourceTypes
 
+import screens
 if TYPE_CHECKING:
     from typing import Self
 
@@ -13,13 +14,11 @@ if TYPE_CHECKING:
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
-import screens
-
 
 class BaseScreen(Screen):
     """В классе содержится кнопка возврата на StartScreen."""
 
-    cover = settings.MEDIA_ROOT / 'image1.jpg'
+    cover = settings.MEDIA_ROOT / 'default_cover.jpg'
 
     @staticmethod
     def _get_main_menu_button() -> 'Button':

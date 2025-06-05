@@ -41,6 +41,7 @@ class AdminPanel(BaseScreen):
                         hiders=Hider(ONLY_FOR_ADMIN),
                     ),
                 ],
+                [self._get_main_menu_button()]
             ],
         )
 

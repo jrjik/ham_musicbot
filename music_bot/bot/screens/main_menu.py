@@ -8,7 +8,7 @@ from hammett.core.constants import SourceTypes
 from hammett.core.hider import ONLY_FOR_ADMIN, Hider
 from hammett.core.mixins import StartMixin
 
-from screens import admin_panel, artist_list, search_releases
+from screens import artist_list, admin_panel, go_to_search
 
 if TYPE_CHECKING:
     from typing import Self
@@ -33,7 +33,7 @@ MAINTENANCE_SCREEN_DESCRIPTION = (
 class MainMenu(StartMixin):
     """Класс предоставляет стартовый экран с переходами на другие."""
 
-    cover = settings.MEDIA_ROOT / 'image1.jpg'
+    cover = settings.MEDIA_ROOT / 'default_cover.jpg'
 
     description = START_SCREEN_DESCRIPTION
 
@@ -54,7 +54,7 @@ class MainMenu(StartMixin):
             [
                 Button(
                     'Поиск релизов',
-                    search_releases.ArtistSearch,
+                    go_to_search.GoToSearch,
                     source_type=SourceTypes.MOVE_SOURCE_TYPE,
                 ),
             ],

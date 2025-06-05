@@ -7,17 +7,17 @@ from screens.artist_list import ArtistList
 from screens.base import BaseScreen
 from screens.main_menu import MainMenu
 from screens.maintenance_mode import MaintenanceScreen
-from screens.search_releases import ArtistSearch
+from screens.search_releases import ArtistSearchResult
+from screens.go_to_search import GoToSearch
 
 __all__ = [
     'AdminPanel',
     'Artist',
     'ArtistAdd',
     'ArtistList',
-    'ArtistSearch',
+    'ArtistSearchResult',
     'BaseScreen',
     'MainMenu',
     'MaintenanceScreen',
+    'GoToSearch',
 ]
-
-

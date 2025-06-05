@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
 
-ADMIN_GROUP = []
+ADMIN_GROUP = {int(os.getenv('ADMIN_GROUP'))}
 
 PERMISSIONS = [
     'permissions.MaintenancePermission',

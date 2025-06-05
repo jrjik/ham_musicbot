@@ -7,7 +7,7 @@ from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
 from hammett.core.handlers import register_button_handler
 
-from database import get_user_list
+from backend.users.services import get_user_list
 from screens.base import BaseScreen
 from spotify import API_CLIENT
 
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-class ArtistSearch(BaseScreen):
+class ArtistSearchResult(BaseScreen):
     """Класс для поиска релизов по любимым исполнителям пользователя."""
 
     async def get_config(
@@ -32,29 +32,29 @@ class ArtistSearch(BaseScreen):
     ) -> 'RenderConfig':
         """Собирает и возвращает конфигурацию для отображения экрана поиска релизов."""
         user_id = update.effective_user.id
-        artists = get_user_list(user_id)
+        artists = await get_user_list(user_id)
 
         if not artists:
             description = (
                 '❌ У вас ещё нет списка исполнителей\n\n'
                 'Пожалуйста, сначала создайте список через меню'
             )
-        elif 'spotify_results' in context.user_data:
-            description = self._format_results(context.user_data['spotify_results'])
+            keyboard = [[self._get_main_menu_button()]]
         else:
-            description = 'Нажмите кнопку для поиска релизов'
+            if update.callback_query and update.callback_query.data:
+                results = API_CLIENT.fetch_releases_by_date(artists, '2023-11-10')
+                description = self._format_results(results)
+            else:
+                description = 'Нажмите кнопку для поиска релизов'
 
-        keyboard = []
-        if artists:
-            keyboard.append([
+            keyboard = [[
                 Button(
                     '🔍 Найти релизы',
                     source=self.search_releases_handler,
                     source_type=SourceTypes.HANDLER_SOURCE_TYPE,
-                ),
-            ])
-
-        keyboard.append([self._get_main_menu_button()])
+                )
+            ],
+                [self._get_main_menu_button()]]
 
         return RenderConfig(
             description=description,
@@ -87,10 +87,5 @@ class ArtistSearch(BaseScreen):
         """Обработчик на кнопку для поиска релизов. После нажатия подгружает список из базы
         и передает в функцию для парсинга.
         """
-        user_id = update.effective_user.id
-        artists = get_user_list(user_id)
-        results = API_CLIENT.fetch_releases_by_date(artists, '2023-11-10')
-        context.user_data['spotify_results'] = results
-
         return await self.move(update, context)
 

@@ -6,8 +6,8 @@ from hammett.core.constants import DEFAULT_STATE, RenderConfig
 from hammett.core.handlers import register_typing_handler
 from hammett.core.mixins import RouteMixin
 
+from backend.users.services import get_user_list, save_user_list
 from constants import INPUT_STATE
-from database import get_user_list, save_user_list
 from screens.base import BaseScreen
 
 if TYPE_CHECKING:
@@ -54,9 +54,9 @@ class ArtistAdd(BaseScreen, RouteMixin):
             )
             return INPUT_STATE
 
-        existing_list = get_user_list(user_id)
+        existing_list = await get_user_list(user_id)
         updated_list = list({*existing_list, artist_name})
-        save_user_list(user_id, updated_list)
+        await save_user_list(user_id, updated_list)
 
         await self.render(
             update,
