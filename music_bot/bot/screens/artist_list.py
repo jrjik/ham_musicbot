@@ -3,10 +3,9 @@
 import json
 from typing import TYPE_CHECKING, Any
 
+from backend_client import API_CLIENT
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
-
-from backend.users.services import get_user_list
 from screens.add_artist import ArtistAdd
 from screens.artist import Artist
 from screens.base import BaseScreen
@@ -31,7 +30,7 @@ class ArtistList(BaseScreen):
     ) -> RenderConfig:
         """Метод для динамической отрисовки кнопок-исполнителей."""
         user_id = _update.effective_user.id
-        artists = await get_user_list(user_id)
+        artists = await API_CLIENT.get_user_list(user_id)
 
         config = RenderConfig(
             description='🎤 Ваш список исполнителей:',

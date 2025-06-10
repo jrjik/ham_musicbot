@@ -3,15 +3,13 @@
 import json
 from typing import TYPE_CHECKING
 
+import screens
+from bot.backend_client import API_CLIENT
 from hammett.core import Button
 from hammett.core.constants import RenderConfig
 from hammett.core.handlers import register_button_handler
-
-import screens
-
-from backend.users.services import get_user_list, save_user_list
 from screens.base import BaseScreen
-from spotify import API_CLIENT
+from spotify import SPOTIFY_API_CLIENT
 
 if TYPE_CHECKING:
     from typing import Any, Self
@@ -32,9 +30,9 @@ class Artist(BaseScreen):
     ) -> RenderConfig:
         """Метод отрисовки карточки исполнителя."""
         artist_data_raw = await self.get_payload(_update, _context)
-        artist_name = json.loads(artist_data_raw).get('name')
+        artist_name = json.loads(artist_data_raw).get('name' )
 
-        artist_info = API_CLIENT.get_artist_card_data(artist_name)
+        artist_info = SPOTIFY_API_CLIENT.get_artist_card_data(artist_name)
         if not artist_info:
             return RenderConfig(description='Не удалось найти информацию об артисте.')
 
@@ -52,7 +50,7 @@ class Artist(BaseScreen):
                         payload=json.dumps({'name': artist_name}))],
                 *await self.add_artist_list_keyboard(_update, _context),
             ],
-            cover=artist_info.get('image_url'),
+            cover=artist_info.get('image_url' ),
         )
 
     @register_button_handler
@@ -64,11 +62,11 @@ class Artist(BaseScreen):
         """Метод для удаления артиста из списка."""
         user_id = update.effective_user.id
         artist_data = await self.get_payload(update, context)
-        artist_name = json.loads(artist_data).get('name')
+        artist_name = json.loads(artist_data).get('name' )
 
-        current_list = await get_user_list(user_id)
+        current_list = await API_CLIENT.get_user_list(user_id)
         if artist_name in current_list:
             current_list.remove(artist_name)
-            await save_user_list(user_id, current_list)
+            await API_CLIENT.save_user_list(user_id, current_list)
 
         return await screens.artist_list.ArtistList().move(update, context)

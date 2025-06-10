@@ -7,8 +7,7 @@ from hammett.core import Button
 from hammett.core.constants import SourceTypes
 from hammett.core.hider import ONLY_FOR_ADMIN, Hider
 from hammett.core.mixins import StartMixin
-
-from screens import artist_list, admin_panel, go_to_search
+from screens import admin_panel, artist_list, go_to_search
 
 if TYPE_CHECKING:
     from typing import Self

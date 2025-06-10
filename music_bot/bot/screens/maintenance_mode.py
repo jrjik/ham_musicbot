@@ -2,13 +2,12 @@
 
 from typing import TYPE_CHECKING
 
+import screens
 from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.handlers import register_button_handler
 from hammett.core.hider import ONLY_FOR_ADMIN, Hider
 from hammett.core.permission import ignore_permissions
-
-import screens
 from permissions import MaintenancePermission
 from redis_client import disable_maintenance
 from screens import BaseScreen

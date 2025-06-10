@@ -4,10 +4,9 @@ import logging
 from typing import Self
 
 import spotipy
+from settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
 from spotipy import SpotifyException
 from spotipy.oauth2 import SpotifyClientCredentials
-
-from settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
 
 logger = logging.getLogger(__name__)
 
@@ -61,4 +60,4 @@ class SpotifyAPIClient:
                 logger.exception('Ошибка при получении релизов артиста %s', artist)
         return results
 
-API_CLIENT = SpotifyAPIClient()
+SPOTIFY_API_CLIENT = SpotifyAPIClient()

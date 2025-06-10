@@ -5,6 +5,9 @@ psycopg2-binary
 django
 ruff
 spotipy~=2.25.1
+psycopg2-binary
+djangorestframework
+aiohttp
 
 git+https://github.com/cusdeb-com/hammett.git@release1#egg=hammett
 

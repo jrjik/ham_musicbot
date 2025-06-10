@@ -2,9 +2,8 @@
 
 from typing import TYPE_CHECKING
 
-from hammett.core.permission import Permission
-
 import screens
+from hammett.core.permission import Permission
 from redis_client import is_maintenance_mode
 
 if TYPE_CHECKING:

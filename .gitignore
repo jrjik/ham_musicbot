@@ -1,11 +1,10 @@
-../../../.idea
+.idea
 .mypy_cache
 .ruff_cache
-__pycache__
+*__pycache__
 *.swp
-.env
+music_bot/bot/.env
 *.mo
 .cache
+*.DS_Store
 music-bot-env
-user_lists.db
-

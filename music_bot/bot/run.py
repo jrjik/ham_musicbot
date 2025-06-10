@@ -1,23 +1,21 @@
 """Модуль для запуска бота."""
-import os
-import sys
-
 import django
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'backend')))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
-django.setup()
-
+from constants import INPUT_STATE
 from hammett.core import Bot
 from hammett.core.constants import DEFAULT_STATE
 from hammett.core.persistence import RedisPersistence
+from screens import (
+    AdminPanel,
+    Artist,
+    ArtistAdd,
+    ArtistList,
+    ArtistSearchResult,
+    GoToSearch,
+    MainMenu,
+    MaintenanceScreen,
+)
 
-from constants import INPUT_STATE
-from screens import AdminPanel, Artist, ArtistAdd, ArtistList, ArtistSearchResult, MainMenu, MaintenanceScreen, \
-    GoToSearch
-
-
+django.setup()
 def main() -> None:
     """Запуск бота."""
     bot = Bot(
@@ -25,7 +23,15 @@ def main() -> None:
         entry_point=MainMenu,
         persistence=RedisPersistence(),
         states={
-            DEFAULT_STATE: {MainMenu, ArtistSearchResult, ArtistList, Artist, AdminPanel, MaintenanceScreen, GoToSearch},
+            DEFAULT_STATE: {
+                MainMenu,
+                ArtistSearchResult,
+                ArtistList,
+                Artist,
+                AdminPanel,
+                MaintenanceScreen,
+                GoToSearch,
+            },
             INPUT_STATE: {ArtistAdd, MainMenu, ArtistList},
         },
     )

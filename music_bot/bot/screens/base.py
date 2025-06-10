@@ -2,11 +2,11 @@
 
 from typing import TYPE_CHECKING
 
+import screens
 from hammett.conf import settings
 from hammett.core import Button, Screen
 from hammett.core.constants import SourceTypes
 
-import screens
 if TYPE_CHECKING:
     from typing import Self
 

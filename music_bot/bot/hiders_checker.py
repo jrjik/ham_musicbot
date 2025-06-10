@@ -4,10 +4,9 @@ from typing import TYPE_CHECKING
 
 from hammett.conf import settings
 from hammett.core.hider import HidersChecker
+from redis_client import is_maintenance_mode
 from telegram.ext import CallbackContext
 from telegram.ext._utils.types import BD, BT, CD, UD
-
-from redis_client import is_maintenance_mode
 
 if TYPE_CHECKING:
     from typing import Self

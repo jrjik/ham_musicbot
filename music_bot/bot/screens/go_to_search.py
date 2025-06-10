@@ -2,11 +2,10 @@
 
 from typing import TYPE_CHECKING
 
-from hammett.conf import settings
-from hammett.core import Button, Screen
-from hammett.core.constants import SourceTypes
-
 import screens
+from hammett.conf import settings
+from hammett.core import Button
+from hammett.core.constants import SourceTypes
 from screens import BaseScreen
 
 if TYPE_CHECKING:
@@ -27,6 +26,7 @@ class GoToSearch(BaseScreen):
         _update: 'Update | None',
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'Keyboard':
+        """Добавляет клавиатуру с кнопками на экран."""
         return [
             [
                 Button(
@@ -35,5 +35,5 @@ class GoToSearch(BaseScreen):
                     source_type=SourceTypes.MOVE_SOURCE_TYPE,
                 ),
             ],
-            [self._get_main_menu_button()]
+            [self._get_main_menu_button()],
         ]

@@ -2,12 +2,11 @@
 
 from typing import TYPE_CHECKING
 
+import screens
 from hammett.core import Button
 from hammett.core.constants import RenderConfig
 from hammett.core.handlers import register_button_handler
 from hammett.core.hider import ONLY_FOR_ADMIN, Hider
-
-import screens
 from redis_client import enable_maintenance, is_maintenance_mode
 from screens.base import BaseScreen
 
@@ -41,7 +40,7 @@ class AdminPanel(BaseScreen):
                         hiders=Hider(ONLY_FOR_ADMIN),
                     ),
                 ],
-                [self._get_main_menu_button()]
+                [self._get_main_menu_button()],
             ],
         )
 
