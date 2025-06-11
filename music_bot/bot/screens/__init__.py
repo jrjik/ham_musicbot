@@ -1,4 +1,4 @@
-"""init.py."""
+"""Корневой модуль пакета с экранами."""
 
 from screens.add_artist import ArtistAdd
 from screens.admin_panel import AdminPanel

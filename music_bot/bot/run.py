@@ -16,6 +16,7 @@ from screens import (
 )
 
 django.setup()
+
 def main() -> None:
     """Запуск бота."""
     bot = Bot(

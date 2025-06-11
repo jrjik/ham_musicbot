@@ -30,10 +30,13 @@ REDIS_PERSISTENCE = {
 }
 
 REDIS_INTERNAL_DB = 1
-API_BASE_URL = 'http://127.0.0.1:8000/api/'
+
 #
-# Настройки Spotify API
+# API
 #
 
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
+
 SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
+
+API_BASE_URL = 'http://127.0.0.1:8000/api/'

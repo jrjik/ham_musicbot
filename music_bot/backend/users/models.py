@@ -9,7 +9,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
-class ArtistList(models.Model):
+class TelegramUser(models.Model):
     telegram_id = models.BigIntegerField(primary_key=True)
     items = ArrayField(models.CharField(max_length=255))
 

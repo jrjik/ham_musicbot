@@ -1,10 +1,10 @@
 from rest_framework import viewsets
 
-from .models import ArtistList
-from .serializers import ArtistListSerializer
+from users.models import TelegramUser
+from users.serializers import TelegramUserSerializer
 
 
-class ArtistListViewSet(viewsets.ModelViewSet):
-    queryset = ArtistList.objects.all()
-    serializer_class = ArtistListSerializer
+class TelegramUserViewSet(viewsets.ModelViewSet):
+    queryset = TelegramUser.objects.all()
+    serializer_class = TelegramUserSerializer
     lookup_field = 'telegram_id'

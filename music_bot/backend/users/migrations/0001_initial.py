@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='ArtistList',
+            name='TelegramUser',
             fields=[
                 ('telegram_id', models.BigIntegerField(primary_key=True, serialize=False)),
                 ('items', django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=255), size=None)),

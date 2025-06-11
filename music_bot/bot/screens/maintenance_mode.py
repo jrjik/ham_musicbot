@@ -44,6 +44,7 @@ class MaintenanceScreen(BaseScreen):
             [self._get_main_menu_button()],
         ]
 
+    @ignore_permissions([MaintenancePermission])
     @register_button_handler
     async def disable(
         self: 'Self',

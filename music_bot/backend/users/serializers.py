@@ -1,9 +1,9 @@
 from rest_framework import serializers
 
-from .models import ArtistList
+from users.models import TelegramUser
 
 
-class ArtistListSerializer(serializers.ModelSerializer):
+class TelegramUserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ArtistList
+        model = TelegramUser
         fields = '__all__'
