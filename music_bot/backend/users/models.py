@@ -12,6 +12,3 @@ from django.db import models
 class TelegramUser(models.Model):
     telegram_id = models.BigIntegerField(primary_key=True)
     items = ArrayField(models.CharField(max_length=255))
-
-    class Meta:
-        db_table = 'artist_list'

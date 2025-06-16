@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
+
 class MyHidersChecker(HidersChecker):
     """Класс с кастомными правилами отображения кнопок."""
 
@@ -22,4 +23,3 @@ class MyHidersChecker(HidersChecker):
         _context: 'CallbackContext[BT, UD, CD, BD]') -> bool:
         """Проверка, является ли пользователь администратором."""
         return update.effective_user.id in settings.ADMIN_GROUP
-

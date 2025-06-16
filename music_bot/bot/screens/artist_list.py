@@ -22,19 +22,15 @@ class ArtistList(BaseScreen):
     и редактированием существующего.
     """
 
-    async def get_config(
+    description = '🎤 Ваш список исполнителей:'
+
+    async def add_default_keyboard(
         self: 'Self',
         _update: 'Update | None',
         _context: 'CallbackContext[BT, UD, CD, BD]',
-        **_kwargs: 'Any',
-    ) -> RenderConfig:
-        """Метод для динамической отрисовки кнопок-исполнителей."""
+    ) -> 'Keyboard':
         user_id = _update.effective_user.id
         artists = await API_CLIENT.get_user_list(user_id)
-
-        config = RenderConfig(
-            description='🎤 Ваш список исполнителей:',
-        )
 
         artist_buttons = [
             [
@@ -43,21 +39,19 @@ class ArtistList(BaseScreen):
                     Artist,
                     source_type=SourceTypes.MOVE_SOURCE_TYPE,
                     payload=json.dumps({'name': artist}),
-            ),
-        ]
+                ),
+            ]
             for artist in artists
         ]
 
-        config.keyboard = [
+        return [
             *artist_buttons,
             [
                 Button(
                     '➕ Добавить исполнителя',
                     ArtistAdd,
                     source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
-            ),
+                ),
             ],
-                [self._get_main_menu_button()],
+            [self._get_main_menu_button()],
         ]
-
-        return config

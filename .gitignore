@@ -3,7 +3,7 @@
 .ruff_cache
 *__pycache__
 *.swp
-music_bot/bot/.env
+*.env
 *.mo
 .cache
 *.DS_Store

@@ -22,7 +22,6 @@ class BaseScreen(Screen):
 
     @staticmethod
     def _get_main_menu_button() -> 'Button':
-
         return Button(
             '⬅️ В главное меню',
             source=screens.main_menu.MainMenu,
@@ -44,7 +43,6 @@ class BaseScreen(Screen):
     ) -> 'Keyboard':
         """Метод добавляет кнопку возврата в главное меню на экран."""
         return [[self._get_main_menu_button()]]
-
 
     async def add_artist_list_keyboard(
         self: 'Self',

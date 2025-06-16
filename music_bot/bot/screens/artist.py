@@ -30,7 +30,7 @@ class Artist(BaseScreen):
     ) -> RenderConfig:
         """Метод отрисовки карточки исполнителя."""
         artist_data_raw = await self.get_payload(_update, _context)
-        artist_name = json.loads(artist_data_raw).get('name' )
+        artist_name = json.loads(artist_data_raw).get('name')
 
         artist_info = SPOTIFY_API_CLIENT.get_artist_card_data(artist_name)
         if not artist_info:
@@ -50,7 +50,7 @@ class Artist(BaseScreen):
                         payload=json.dumps({'name': artist_name}))],
                 *await self.add_artist_list_keyboard(_update, _context),
             ],
-            cover=artist_info.get('image_url' ),
+            cover=artist_info.get('image_url'),
         )
 
     @register_button_handler
@@ -62,11 +62,11 @@ class Artist(BaseScreen):
         """Метод для удаления артиста из списка."""
         user_id = update.effective_user.id
         artist_data = await self.get_payload(update, context)
-        artist_name = json.loads(artist_data).get('name' )
+        artist_name = json.loads(artist_data).get('name')
 
         current_list = await API_CLIENT.get_user_list(user_id)
         if artist_name in current_list:
             current_list.remove(artist_name)
-            await API_CLIENT.save_user_list(user_id, current_list)
+            await API_CLIENT.save_user_artists(user_id, current_list)
 
         return await screens.artist_list.ArtistList().move(update, context)

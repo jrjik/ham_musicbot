@@ -4,16 +4,15 @@ from typing import TYPE_CHECKING
 
 import screens
 from hammett.core import Button
-from hammett.core.constants import RenderConfig
 from hammett.core.handlers import register_button_handler
 from hammett.core.hider import ONLY_FOR_ADMIN, Hider
-from redis_client import enable_maintenance, is_maintenance_mode
+from redis_client import enable_maintenance
 from screens.base import BaseScreen
 
 if TYPE_CHECKING:
-    from typing import Any, Self
+    from typing import Self
 
-    from hammett.types import State
+    from hammett.types import State, Keyboard
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
@@ -21,34 +20,32 @@ if TYPE_CHECKING:
 class AdminPanel(BaseScreen):
     """Экран панели администратора, доступный только админам."""
 
-    async def get_config(
+    description = (
+        'Панель администратора\n\n'
+        f'Текущий режим: Рабочий'
+    )
+
+    async def add_default_keyboard(
         self: 'Self',
         _update: 'Update | None',
         _context: 'CallbackContext[BT, UD, CD, BD]',
-        **_kwargs: 'Any') -> 'RenderConfig':
-        """Формирует конфигурацию экрана в зависимости от текущего режима работы бота."""
-        return RenderConfig(
-            description=(
-                'Панель администратора\n\n'
-                  f'Текущий режим: {"Обслуживание" if await is_maintenance_mode() else "Рабочий"}'
-            ),
-            keyboard=[
-                [
-                    Button(
-                        'Включить обслуживание',
-                        source=self.enable,
-                        hiders=Hider(ONLY_FOR_ADMIN),
-                    ),
-                ],
-                [self._get_main_menu_button()],
+    ) -> 'Keyboard':
+        return [
+            [
+                Button(
+                    'Включить обслуживание',
+                    source=self.enable,
+                    hiders=Hider(ONLY_FOR_ADMIN),
+                )
             ],
-        )
+            [self._get_main_menu_button()],
+        ]
 
     @register_button_handler
     async def enable(
         self: 'Self',
         update: 'Update | None',
-        context: 'CallbackContext[BT, UD, CD, BD]' ) \
+        context: 'CallbackContext[BT, UD, CD, BD]') \
         -> 'State':
         """Обработчик кнопки 'Включить обслуживание'.
         Включает режим обслуживания и возвращает пользователя на главный экран.

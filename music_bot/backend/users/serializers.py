@@ -6,4 +6,4 @@ from users.models import TelegramUser
 class TelegramUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = TelegramUser
-        fields = '__all__'
+        fields = ['telegram_id', 'items']

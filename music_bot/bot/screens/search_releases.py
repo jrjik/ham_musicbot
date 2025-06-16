@@ -46,14 +46,9 @@ class ArtistSearchResult(BaseScreen):
             else:
                 description = 'Нажмите кнопку для поиска релизов'
 
-            keyboard = [[
-                Button(
-                    '🔍 Найти релизы',
-                    source=self.search_releases_handler,
-                    source_type=SourceTypes.HANDLER_SOURCE_TYPE,
-                ),
-            ],
-                [self._get_main_menu_button()]]
+            keyboard = [
+                [self._get_main_menu_button()]
+            ]
 
         return RenderConfig(
             description=description,
@@ -63,7 +58,7 @@ class ArtistSearchResult(BaseScreen):
     def _format_results(
         self: 'Self',
         results: dict[str],
-    )-> str:
+    ) -> str:
         """Функция для форматирования спарщенных данных."""
         if not results:
             return 'На указанную дату релизов не найдено'
@@ -76,15 +71,3 @@ class ArtistSearchResult(BaseScreen):
                 message += f'   Ссылка: {release['external_urls']['spotify']}\n\n'
 
         return message
-
-    @register_button_handler
-    async def search_releases_handler(
-        self: 'Self',
-        update: 'Update | None',
-        context: 'CallbackContext[BT, UD, CD, BD]',
-    ) -> 'State':
-        """Обработчик на кнопку для поиска релизов. После нажатия подгружает список из базы
-        и передает в функцию для парсинга.
-        """
-        return await self.move(update, context)
-

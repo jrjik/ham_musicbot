@@ -3,7 +3,6 @@
 from typing import TYPE_CHECKING
 
 import screens
-from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import SourceTypes
 from screens import BaseScreen
@@ -18,8 +17,6 @@ if TYPE_CHECKING:
 
 class GoToSearch(BaseScreen):
     """В классе содержится кнопка возврата на StartScreen."""
-
-    cover = settings.MEDIA_ROOT / 'default_cover.jpg'
 
     async def add_default_keyboard(
         self: 'Self',

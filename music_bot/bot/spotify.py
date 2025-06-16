@@ -4,7 +4,9 @@ import logging
 from typing import Self
 
 import spotipy
-from settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
+
+from hammett.conf import settings
+from settings import SPOTIFY_CLIENT_SECRET, SPOTIFY_CLIENT_ID
 from spotipy import SpotifyException
 from spotipy.oauth2 import SpotifyClientCredentials
 
@@ -59,5 +61,6 @@ class SpotifyAPIClient:
             except SpotifyException:
                 logger.exception('Ошибка при получении релизов артиста %s', artist)
         return results
+
 
 SPOTIFY_API_CLIENT = SpotifyAPIClient()

@@ -55,7 +55,7 @@ class ArtistAdd(BaseScreen, RouteMixin):
 
         existing_list = await API_CLIENT.get_user_list(user_id)
         updated_list = list({*existing_list, artist_name})
-        await API_CLIENT.save_user_list(user_id, updated_list)
+        await API_CLIENT.save_user_artists(user_id, updated_list)
 
         await self.render(
             update,

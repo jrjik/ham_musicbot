@@ -1,5 +1,4 @@
 """Модуль для запуска бота."""
-import django
 from constants import INPUT_STATE
 from hammett.core import Bot
 from hammett.core.constants import DEFAULT_STATE
@@ -15,7 +14,6 @@ from screens import (
     MaintenanceScreen,
 )
 
-django.setup()
 
 def main() -> None:
     """Запуск бота."""

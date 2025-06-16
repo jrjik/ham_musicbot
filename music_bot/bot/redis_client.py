@@ -8,7 +8,7 @@ redis_client = redis.Redis(
     host=settings.REDIS_PERSISTENCE['HOST'],
     port=settings.REDIS_PERSISTENCE['PORT'],
     db=REDIS_INTERNAL_DB,
-    password=settings.REDIS_PERSISTENCE.get('PASSWORD' ),
+    password=settings.REDIS_PERSISTENCE.get('PASSWORD'),
     decode_responses=True,
 )
 
