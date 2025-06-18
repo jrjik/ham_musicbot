@@ -3,17 +3,14 @@
 import logging
 from typing import TYPE_CHECKING
 
-from backend_client import API_CLIENT
-from hammett.core import Button
-from hammett.core.constants import RenderConfig, SourceTypes
-from hammett.core.handlers import register_button_handler
+from client.backend_client import API_CLIENT
+from client.spotify import SPOTIFY_API_CLIENT
+from hammett.core.constants import RenderConfig
 from screens.base import BaseScreen
-from spotify import SPOTIFY_API_CLIENT
 
 if TYPE_CHECKING:
     from typing import Any, Self
 
-    from hammett.types import State
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
@@ -21,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class ArtistSearchResult(BaseScreen):
-    """Класс для поиска релизов по любимым исполнителям пользователя."""
+    """Класс поиска релизов."""
 
     async def get_config(
         self: 'Self',
@@ -29,45 +26,35 @@ class ArtistSearchResult(BaseScreen):
         _context: 'CallbackContext[BT, UD, CD, BD]',
         **_kwargs: 'Any',
     ) -> 'RenderConfig':
-        """Собирает и возвращает конфигурацию для отображения экрана поиска релизов."""
+        """Метод класса возвращает релизы, которые потом передаются в экран."""
         user_id = update.effective_user.id
         artists = await API_CLIENT.get_user_list(user_id)
 
         if not artists:
-            description = (
-                '❌ У вас ещё нет списка исполнителей\n\n'
-                'Пожалуйста, сначала создайте список через меню'
-            )
-            keyboard = [[self._get_main_menu_button()]]
+            description = ('❌ У вас ещё нет списка исполнителей\n'
+                           '\nПожалуйста, сначала создайте список через меню')
+        elif update.callback_query and update.callback_query.data:
+            results = SPOTIFY_API_CLIENT.fetch_last_friday_releases(artists)
+            previous_friday = SPOTIFY_API_CLIENT.get_previous_friday()
+            description = self._format_results(results, previous_friday)
         else:
-            if update.callback_query and update.callback_query.data:
-                results = SPOTIFY_API_CLIENT.fetch_releases_by_date(artists, '2023-11-10')
-                description = self._format_results(results)
-            else:
-                description = 'Нажмите кнопку для поиска релизов'
+            description = 'Нажмите кнопку для поиска релизов'
 
-            keyboard = [
-                [self._get_main_menu_button()]
-            ]
-
-        return RenderConfig(
-            description=description,
-            keyboard=keyboard,
-        )
+        return RenderConfig(description=description)
 
     def _format_results(
         self: 'Self',
         results: dict[str],
+        release_date: str,
     ) -> str:
-        """Функция для форматирования спарщенных данных."""
+        """Форматирует результаты с указанием даты релиза."""
         if not results:
-            return 'На указанную дату релизов не найдено'
+            return f'На {release_date} релизов не найдено 😔'
 
-        message = '🎵 Найденные релизы (2023-11-10):\n\n'
+        message = f'🎵 Найденные релизы ({release_date}):\n\n'
         for artist, releases in results.items():
             message += f'🎤 {artist}:\n'
             for release in releases:
-                message += f'▫️ {release['name']} ({release['album_type']})\n'
-                message += f'   Ссылка: {release['external_urls']['spotify']}\n\n'
-
+                message += f'▫️ {release["name"]} ({release["album_type"]})\n'
+                message += f'   Ссылка: {release["external_urls"]["spotify"]}\n\n'
         return message

@@ -4,12 +4,12 @@ import json
 from typing import TYPE_CHECKING
 
 import screens
-from bot.backend_client import API_CLIENT
+from client.backend_client import API_CLIENT
+from client.spotify import SPOTIFY_API_CLIENT
 from hammett.core import Button
 from hammett.core.constants import RenderConfig
 from hammett.core.handlers import register_button_handler
 from screens.base import BaseScreen
-from spotify import SPOTIFY_API_CLIENT
 
 if TYPE_CHECKING:
     from typing import Any, Self

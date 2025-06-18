@@ -1,9 +1,11 @@
-"""Модуль содержит реализацию экрана."""
+"""Модуль содержит реализацию экрана со списком исполнителей."""
 
 import json
-from typing import TYPE_CHECKING, Any
+import math
+from typing import TYPE_CHECKING
 
-from backend_client import API_CLIENT
+from client.backend_client import API_CLIENT
+from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
 from screens.add_artist import ArtistAdd
@@ -11,26 +13,45 @@ from screens.artist import Artist
 from screens.base import BaseScreen
 
 if TYPE_CHECKING:
-    from typing import Self
+    from typing import Any, Self
 
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
 
+def paginate(items: list, page: int, page_size: int = settings.PAGE_SIZE) -> list:
+    """Функция пагинации списка по 5 элементов/страницу."""
+    start = page * page_size
+    return items[start:start + page_size]
+
+
 class ArtistList(BaseScreen):
-    """Класс содержит реализацию экрана с выводом текущего списка исполнителей
-    и редактированием существующего.
-    """
+    """Экран со списком артистов с циклической пагинацией."""
 
-    description = '🎤 Ваш список исполнителей:'
-
-    async def add_default_keyboard(
+    async def get_config(
         self: 'Self',
-        _update: 'Update | None',
-        _context: 'CallbackContext[BT, UD, CD, BD]',
-    ) -> 'Keyboard':
-        user_id = _update.effective_user.id
+        update: 'Update | None',
+        context: 'CallbackContext[BT, UD, CD, BD]',
+        **_kwargs: 'Any',
+    ) -> RenderConfig:
+        """Метод отрисовки описания, кнопок-исполнителей и кнопок перехода."""
+        user_id = update.effective_user.id
         artists = await API_CLIENT.get_user_list(user_id)
+
+        total_pages = max(1, math.ceil(len(artists) / settings.PAGE_SIZE))
+
+        page = 0
+        if update.callback_query and update.callback_query.data:
+            try:
+                payload = json.loads(await self.get_payload(update, context))
+                page = int(payload.get('page', 0))
+            except (json.JSONDecodeError, ValueError, KeyError):
+                page = 0
+
+        page %= total_pages
+
+        description = f'🎤 Ваш список исполнителей (страница {page + 1} из {total_pages}):'
+        artists_on_page = paginate(artists, page)
 
         artist_buttons = [
             [
@@ -41,17 +62,42 @@ class ArtistList(BaseScreen):
                     payload=json.dumps({'name': artist}),
                 ),
             ]
-            for artist in artists
+            for artist in artists_on_page
         ]
 
-        return [
-            *artist_buttons,
-            [
+        nav_buttons = []
+        if total_pages > 1:
+            prev_page = (page - 1) % total_pages
+            next_page = (page + 1) % total_pages
+            nav_buttons = [
                 Button(
-                    '➕ Добавить исполнителя',
-                    ArtistAdd,
-                    source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
+                    '⬅️',
+                    ArtistList,
+                    source_type=SourceTypes.MOVE_SOURCE_TYPE,
+                    payload=json.dumps({'page': prev_page}),
                 ),
-            ],
-            [self._get_main_menu_button()],
-        ]
+                Button(
+                    '➡️',
+                    ArtistList,
+                    source_type=SourceTypes.MOVE_SOURCE_TYPE,
+                    payload=json.dumps({'page': next_page}),
+                ),
+            ]
+
+        keyboard = [*artist_buttons]
+        if nav_buttons:
+            keyboard.append(nav_buttons)
+
+        keyboard.append([
+            Button(
+                '➕ Добавить исполнителя',
+                ArtistAdd,
+                source_type=SourceTypes.MOVE_ALONG_ROUTE_SOURCE_TYPE,
+            ),
+        ])
+        keyboard.append([self._get_main_menu_button()])
+
+        return RenderConfig(
+            description=description,
+            keyboard=keyboard,
+        )

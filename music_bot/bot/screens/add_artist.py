@@ -2,8 +2,9 @@
 
 from typing import TYPE_CHECKING
 
-from bot.backend_client import API_CLIENT
+from client.backend_client import API_CLIENT
 from constants import INPUT_STATE
+from hammett.conf import settings
 from hammett.core.constants import DEFAULT_STATE, RenderConfig
 from hammett.core.handlers import register_typing_handler
 from hammett.core.mixins import RouteMixin
@@ -30,7 +31,7 @@ class ArtistAdd(BaseScreen, RouteMixin):
     routes = (({DEFAULT_STATE}, INPUT_STATE),)
 
     @register_typing_handler
-    async def handle_text_(
+    async def handle_text(
         self: 'Self',
         update: 'Update | None',
         context: 'CallbackContext[BT, UD, CD, BD]',
@@ -41,6 +42,17 @@ class ArtistAdd(BaseScreen, RouteMixin):
 
         user_id = update.effective_user.id
         artist_name = update.message.text.strip()
+
+        if len(artist_name) < settings.MIN_ARTIST_NAME_LENGTH or artist_name.isdigit():
+            await self.render(
+                update,
+                context,
+                config=RenderConfig(
+                    as_new_message=True,
+                    description='Исполнитель должно быть минимум из 3 символов и содержать буквы.',
+                ),
+            )
+            return INPUT_STATE
 
         if ',' in artist_name or '  ' in artist_name:
             await self.render(
