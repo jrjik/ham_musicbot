@@ -59,5 +59,13 @@ class APIClient:
                     resp.status,
                 )
 
+    async def get_all_user_ids(self) -> list[int]:
+        """Получение всех id пользователей."""
+        url = f'{self._base_url}/users/'
+        async with aiohttp.ClientSession() as session, session.get(url) as resp:
+            if resp.status == HTTPStatus.OK:
+                data = await resp.json()
+                return [user['telegram_id'] for user in data]
+            return []
 
 API_CLIENT = APIClient()

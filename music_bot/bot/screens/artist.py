@@ -3,12 +3,11 @@
 import json
 from typing import TYPE_CHECKING
 
-
 import screens
 from client.backend_client import API_CLIENT
 from client.spotify import SPOTIFY_API_CLIENT
 from hammett.core import Button
-from hammett.core.constants import RenderConfig, SourceTypes, DEFAULT_STATE
+from hammett.core.constants import DEFAULT_STATE, RenderConfig, SourceTypes
 from hammett.core.handlers import register_button_handler
 from screens.base import BaseScreen
 from telegram import Update
@@ -19,7 +18,6 @@ if TYPE_CHECKING:
     from hammett.types import State
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
-    from telegram import Update
 
 class Artist(BaseScreen):
     """Экран карточки с информацией об артисте."""
@@ -90,4 +88,6 @@ class Artist(BaseScreen):
             current_list.remove(artist_name)
             await API_CLIENT.save_user_artists(user_id, current_list)
 
-        return await screens.artist_list.ArtistList().move(update, context, payload=json.dumps({'page': page}))
+        return await screens.artist_list.ArtistList().move(update,
+                                                           context,
+                                                           payload=json.dumps({'page': page}))

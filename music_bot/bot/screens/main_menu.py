@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from hammett.types import Keyboard
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
-    from telegram import Update
 
 START_SCREEN_DESCRIPTION = (
     '🎶 <b>HMusicBot</b>\n'

@@ -4,16 +4,15 @@ from typing import TYPE_CHECKING
 
 from hammett.conf import settings
 from hammett.core.hider import HidersChecker
+from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.ext._utils.types import BD, BT, CD, UD
-from telegram import Update
 
 if TYPE_CHECKING:
     from typing import Self
 
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
-    from telegram import Update
 
 
 class MyHidersChecker(HidersChecker):

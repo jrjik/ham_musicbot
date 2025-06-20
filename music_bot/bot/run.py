@@ -13,6 +13,7 @@ from screens import (
     MainMenu,
     MaintenanceScreen,
 )
+from screens.notification import send_friday_releases_notification
 
 
 def main() -> None:
@@ -33,6 +34,24 @@ def main() -> None:
             },
             INPUT_STATE: {ArtistAdd, MainMenu, ArtistList},
         },
+        job_configs=[
+            {
+                'callback': send_friday_releases_notification,
+                'job_kwargs': {
+                    'trigger': 'cron',
+                    'day_of_week': 'fri',
+                    'hour': 0,
+                    'minute': 5,
+                },
+            },
+            {
+                'callback': send_friday_releases_notification,
+                'job_kwargs': {
+                    'trigger': 'interval',
+                    'seconds': 15,
+                },
+            },
+        ],
     )
     bot.run()
 

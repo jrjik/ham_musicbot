@@ -38,7 +38,8 @@ class ArtistAdd(BaseScreen, RouteMixin):
         context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'State':
         """Обработчик кнопки для записи исполнителей."""
-        if update is None or update.effective_user is None or update.message is None or update.message.text is None:
+        if (update is None or update.effective_user is None
+            or update.message is None or update.message.text is None):
             return DEFAULT_STATE
 
         user_id = update.effective_user.id

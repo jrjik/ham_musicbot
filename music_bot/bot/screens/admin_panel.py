@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from hammett.types import Keyboard, State
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
-    from telegram import Update
 
 
 class AdminPanel(BaseScreen):

@@ -2,25 +2,23 @@
 
 import json
 import math
-from typing import TYPE_CHECKING
-from typing import Any
-from hammett.core.exceptions import PayloadIsEmpty
+from typing import TYPE_CHECKING, Any
 
 from client.backend_client import API_CLIENT
 from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
+from hammett.core.exceptions import PayloadIsEmpty
 from screens.add_artist import ArtistAdd
 from screens.artist import Artist
 from screens.base import BaseScreen
 from telegram import Update
 
 if TYPE_CHECKING:
-    from typing import Any, Self
+    from typing import Self
 
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
-    from telegram import Update
 
 
 def paginate(items: list[Any], page: int, page_size: int = settings.PAGE_SIZE) -> list[Any]:
