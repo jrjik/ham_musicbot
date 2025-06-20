@@ -6,6 +6,7 @@ import screens
 from hammett.conf import settings
 from hammett.core import Button, Screen
 from hammett.core.constants import SourceTypes
+from telegram import Update
 
 if TYPE_CHECKING:
     from typing import Self
@@ -13,7 +14,6 @@ if TYPE_CHECKING:
     from hammett.types import Keyboard
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
-
 
 class BaseScreen(Screen):
     """В классе содержится кнопка возврата на StartScreen."""
@@ -38,7 +38,7 @@ class BaseScreen(Screen):
 
     async def add_default_keyboard(
         self: 'Self',
-        _update: 'Update | None',
+        _update: Update | None,
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'Keyboard':
         """Метод добавляет кнопку возврата в главное меню на экран."""
@@ -46,7 +46,7 @@ class BaseScreen(Screen):
 
     async def add_artist_list_keyboard(
         self: 'Self',
-        _update: 'Update | None',
+        _update: Update | None,
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'Keyboard':
         """Метод добавляет кнопку возврата назад."""

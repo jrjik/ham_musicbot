@@ -8,6 +8,7 @@ from hammett.core import Button
 from hammett.core.handlers import register_button_handler
 from hammett.core.hider import ONLY_FOR_ADMIN, Hider
 from screens.base import BaseScreen
+from telegram import Update
 
 if TYPE_CHECKING:
     from typing import Self
@@ -15,6 +16,7 @@ if TYPE_CHECKING:
     from hammett.types import Keyboard, State
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
+    from telegram import Update
 
 
 class AdminPanel(BaseScreen):
@@ -45,7 +47,7 @@ class AdminPanel(BaseScreen):
     @register_button_handler
     async def enable(
         self: 'Self',
-        update: 'Update | None',
+        update: Update | None,
         context: 'CallbackContext[BT, UD, CD, BD]') \
         -> 'State':
         """Обработчик кнопки 'Включить обслуживание'.

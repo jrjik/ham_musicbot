@@ -1,16 +1,18 @@
 """Модуль содержит реализацию permission-класса."""
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import screens
 from client.redis_client import is_maintenance_mode
 from hammett.core.permission import Permission
+from telegram import Update
 
 if TYPE_CHECKING:
     from typing import Self
 
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
+    from telegram import Update
 
 
 class MaintenancePermission(Permission):
@@ -18,7 +20,7 @@ class MaintenancePermission(Permission):
 
     async def has_permission(
         self: 'Self',
-        _update: 'Update | None',
+        _update: Update | None,
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> bool:
         """Проверяет, выключен ли режим обслуживания."""
@@ -26,8 +28,8 @@ class MaintenancePermission(Permission):
 
     async def handle_permission_denied(
         self: 'Self',
-        update: 'Update | None',
+        update: Update | None,
         context: 'CallbackContext[BT, UD, CD, BD]',
-    ) -> bool:
+    ) -> bool | Any:
         """Обрабатывает отказ в доступе при включённом режиме обслуживания."""
         return await screens.maintenance_mode.MaintenanceScreen().jump(update, context)

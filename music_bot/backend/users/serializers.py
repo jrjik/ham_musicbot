@@ -15,10 +15,6 @@ class TelegramUserSerializer(serializers.ModelSerializer):
 
         for item in value:
             item = item.strip()
-            if len(item) < 3:
-                continue
-            if item.isdigit():
-                continue
             norm = item.lower()
             if norm in seen:
                 continue

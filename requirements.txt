@@ -8,6 +8,7 @@ spotipy~=2.25.1
 psycopg2-binary
 djangorestframework
 aiohttp
+mypy
 
 git+https://github.com/cusdeb-com/hammett.git@release1#egg=hammett
 

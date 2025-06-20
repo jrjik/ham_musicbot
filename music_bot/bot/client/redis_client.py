@@ -1,4 +1,5 @@
 """Модуль содержит функции для управления режимом обслуживания."""
+from typing import Any
 
 import redis.asyncio as redis
 from hammett.conf import settings
@@ -25,6 +26,6 @@ async def disable_maintenance() -> None:
     await redis_client.set(MAINTENANCE_MODE_KEY, 'off')
 
 
-async def is_maintenance_mode() -> bool:
+async def is_maintenance_mode() -> bool | Any:
     """Проверяет, включён ли режим обслуживания."""
     return await redis_client.get(MAINTENANCE_MODE_KEY) == 'on'

@@ -7,6 +7,7 @@ from client.backend_client import API_CLIENT
 from hammett.core import Button
 from hammett.core.constants import SourceTypes
 from screens import BaseScreen
+from telegram import Update
 
 if TYPE_CHECKING:
     from typing import Self
@@ -14,6 +15,7 @@ if TYPE_CHECKING:
     from hammett.types import Keyboard
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
+    from telegram import Update
 
 
 class GoToSearch(BaseScreen):
@@ -21,12 +23,15 @@ class GoToSearch(BaseScreen):
 
     async def get_description(
         self: 'Self',
-        update: 'Update | None',
+        update: Update | None,
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> str:
         """Метод для передачи в сообщение описания текущего списка исполнителя,
         по которому будет парсинг.
         """
+        if update is None or update.effective_user is None or update.update_id is None:
+            return ''
+
         user_id = update.effective_user.id
         artist_list = await API_CLIENT.get_user_list(user_id)
 
@@ -42,7 +47,7 @@ class GoToSearch(BaseScreen):
 
     async def add_default_keyboard(
         self: 'Self',
-        _update: 'Update | None',
+        _update: Update | None,
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'Keyboard':
         """Добавляет клавиатуру с кнопками на экран."""

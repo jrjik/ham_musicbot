@@ -2,7 +2,7 @@
 
 import logging
 from datetime import UTC, datetime, timedelta
-from typing import Self
+from typing import Self, Any
 
 import spotipy
 from hammett.conf import settings
@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 
 FRIDAY_WEEKDAY = 4  # пятница (0-понедельник, 6-воскресенье)
 MIDDAY_HOUR = 12
+
 
 class SpotifyAPIClient:
     """Клиент для взаимодействия с API Spotify."""
@@ -36,7 +37,10 @@ class SpotifyAPIClient:
         previous_friday = today - timedelta(days=days_ago)
         return previous_friday.strftime('%Y-%m-%d')
 
-    def get_artist_card_data(self, artist_name: str) -> dict | None:
+    def get_artist_card_data(
+        self,
+        artist_name: str
+    ) -> dict[str, str | list[str] | int | None] | None:
         """Получить информацию об артисте из Spotify."""
         results = self._sp.search(q=artist_name, type='artist', limit=1)
         items = results.get('artists', {}).get('items', [])
@@ -56,7 +60,7 @@ class SpotifyAPIClient:
         self: Self,
         artists: list[str],
         target_date: str,
-    ) -> dict[str, list[dict]]:
+    ) -> dict[str, list[dict[str, Any]]]:
         """Получить релизы артистов по конкретной дате."""
         results = {}
         for artist in artists:
@@ -80,7 +84,7 @@ class SpotifyAPIClient:
                 continue
         return results
 
-    def fetch_last_friday_releases(self: Self, artists: list[str]) -> dict[str, list[dict]]:
+    def fetch_last_friday_releases(self: Self, artists: list[str]) -> dict[str, list[dict[str, Any]]]:
         """Получить релизы артистов за прошлую пятницу."""
         previous_friday = self.get_previous_friday()
         logger.info('Поиск релизов за %s', previous_friday)
