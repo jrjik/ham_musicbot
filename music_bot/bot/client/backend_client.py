@@ -66,6 +66,8 @@ class APIClient:
             if resp.status == HTTPStatus.OK:
                 data = await resp.json()
                 return [user['telegram_id'] for user in data]
+
             return []
+
 
 API_CLIENT = APIClient()

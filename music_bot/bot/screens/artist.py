@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
+
 class Artist(BaseScreen):
     """Экран карточки с информацией об артисте."""
 
@@ -31,7 +32,7 @@ class Artist(BaseScreen):
         """Метод отрисовки карточки исполнителя."""
         artist_data_raw = await self.get_payload(update, context)
         payload = json.loads(artist_data_raw)
-        artist_name = payload.get('name')
+        artist_name = payload['name']
         page = payload.get('page', 0)
 
         artist_info = SPOTIFY_API_CLIENT.get_artist_card_data(artist_name)
@@ -74,13 +75,13 @@ class Artist(BaseScreen):
         context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'State':
         """Метод для удаления артиста из списка."""
-        if update is None or update.effective_user is None or update.update_id is None:
+        if update is None or update.effective_user is None:
             return DEFAULT_STATE
 
         user_id = update.effective_user.id
         artist_data = await self.get_payload(update, context)
         payload = json.loads(artist_data)
-        artist_name = payload.get('name')
+        artist_name = payload['name']
         page = payload.get('page', 0)
 
         current_list = await API_CLIENT.get_user_list(user_id)

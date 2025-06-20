@@ -4,17 +4,15 @@ import os
 from pathlib import PosixPath
 from typing import Any
 
-from constants import INPUT_STATE
-
-os.environ.setdefault('HAMMETT_SETTINGS_MODULE', 'settings')
 import unittest
 from datetime import UTC, datetime
-
-import screens
 from hammett.core.constants import DEFAULT_STATE, RenderConfig
 from hammett.test.base import BaseTestCase
 from hammett.test.utils import catch_render_config
 from telegram import Message
+
+import screens
+from constants import INPUT_STATE
 
 
 class ArtistAddTests(BaseTestCase):
