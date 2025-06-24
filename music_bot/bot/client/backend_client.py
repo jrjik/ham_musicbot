@@ -1,0 +1,63 @@
+"""Модуль содержит клиент Django API для работы с таблицей users_userlist."""
+
+import logging
+from http import HTTPStatus
+from typing import Self
+
+import aiohttp
+from music_bot.bot.exceptions import RequestFailed
+from hammett.conf import settings
+
+logger = logging.getLogger(__name__)
+
+
+class APIClient:
+    """Клиент для взаимодействия с Django API."""
+
+    def __init__(self: Self) -> None:
+        """Инициализация клиента."""
+        self._base_url = settings.API_BASE_URL
+
+    async def get_user_list(self: Self, telegram_id: int) -> list[str]:
+        """Получить список артистов пользователя по telegram_id."""
+        url = f'{self._base_url}/users/{telegram_id}/'
+        async with aiohttp.ClientSession() as session, \
+            session.get(url) as resp:
+            if resp.status == HTTPStatus.OK:
+                data = await resp.json()
+                return [item.strip() for item in data['items'] if item.strip()]
+            if resp.status != HTTPStatus.NOT_FOUND:
+                logger.error(
+                    'Ошибка при получении пользователя %s: %s',
+                    telegram_id,
+                    resp.status,
+                )
+
+            return []
+
+    async def save_user_artists(self, telegram_id: int, artist_list: list[str]) -> None:
+        payload = {'telegram_id': telegram_id, 'items': sorted(set(artist_list))}
+        url = f'{self._base_url}/users/{telegram_id}/'
+
+        async with aiohttp.ClientSession() as session:
+            async with session.put(url, json=payload) as resp:
+                if resp.status == HTTPStatus.NOT_FOUND:
+                    post_url = f'{self._base_url}/users/'
+                    async with session.post(post_url, json=payload) as post_resp:
+                        if post_resp.status not in (HTTPStatus.OK, HTTPStatus.CREATED):
+                            raise RequestFailed(f'Ошибка создания пользователя: {post_resp.status}')
+                elif resp.status not in (HTTPStatus.OK, HTTPStatus.NO_CONTENT):
+                    raise RequestFailed(f'Ошибка обновления пользователя: {resp.status}')
+
+    async def get_all_user_ids(self) -> list[int]:
+        """Получение всех id пользователей."""
+        url = f'{self._base_url}/users/'
+        async with aiohttp.ClientSession() as session, session.get(url) as resp:
+            if resp.status == HTTPStatus.OK:
+                data = await resp.json()
+                return [user['telegram_id'] for user in data]
+
+            return []
+
+
+API_CLIENT = APIClient()

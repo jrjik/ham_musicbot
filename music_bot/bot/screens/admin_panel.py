@@ -1,0 +1,59 @@
+"""Модуль содержит экран панели администратора, позволяющий переключать режим обслуживания."""
+
+from typing import TYPE_CHECKING
+
+from hammett.core.constants import SourceTypes
+
+from music_bot.bot import screens
+from music_bot.bot.client.redis_client import enable_maintenance
+from hammett.core import Button
+from hammett.core.handlers import register_button_handler
+from hammett.core.hider import ONLY_FOR_ADMIN, Hider
+from music_bot.bot.screens.base import BaseScreen
+
+if TYPE_CHECKING:
+    from typing import Self
+
+    from hammett.types import Keyboard, State
+    from telegram import Update
+    from telegram.ext import CallbackContext
+    from telegram.ext._utils.types import BD, BT, CD, UD
+
+
+class AdminPanel(BaseScreen):
+    """Экран панели администратора, доступный только админам."""
+
+    description = (
+        'Панель администратора\n\n'
+        'Текущий режим: Рабочий'
+    )
+
+    async def add_default_keyboard(
+        self: 'Self',
+        _update: 'Update | None',
+        _context: 'CallbackContext[BT, UD, CD, BD]',
+    ) -> 'Keyboard':
+        """Добавляет клавиатуру с кнопками на экран."""
+        return [
+            [
+                Button(
+                    'Включить обслуживание',
+                    source=self.enable,
+                    hiders=Hider(ONLY_FOR_ADMIN),
+                    source_type=SourceTypes.HANDLER_SOURCE_TYPE,
+                ),
+            ],
+            [self._get_main_menu_button()],
+        ]
+
+    @register_button_handler
+    async def enable(
+        self: 'Self',
+        update: 'Update | None',
+        context: 'CallbackContext[BT, UD, CD, BD]') \
+        -> 'State':
+        """Обработчик кнопки 'Включить обслуживание'.
+        Включает режим обслуживания и возвращает пользователя на главный экран.
+        """
+        await enable_maintenance()
+        return await screens.maintenance_mode.MaintenanceScreen().jump(update, context)

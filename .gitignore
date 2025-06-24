@@ -1,0 +1,10 @@
+.idea
+.mypy_cache
+.ruff_cache
+*__pycache__
+*.swp
+*.env
+*.mo
+.cache
+*.DS_Store
+music-bot-env
