@@ -6,7 +6,6 @@ from typing import Any, Self
 
 import spotipy
 from hammett.conf import settings
-from settings import SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET
 from spotipy import SpotifyException
 from spotipy.oauth2 import SpotifyClientCredentials
 
@@ -23,8 +22,8 @@ class SpotifyAPIClient:
         """Инициализация клиента."""
         self._sp = spotipy.Spotify(
             auth_manager=SpotifyClientCredentials(
-                client_id=SPOTIFY_CLIENT_ID,
-                client_secret=SPOTIFY_CLIENT_SECRET,
+                client_id=settings.SPOTIFY_CLIENT_ID,
+                client_secret=settings.SPOTIFY_CLIENT_SECRET,
             ),
         )
 

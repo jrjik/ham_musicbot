@@ -1,14 +1,14 @@
 """Корневой модуль пакета с экранами."""
 
-from screens.add_artist import ArtistAdd
-from screens.admin_panel import AdminPanel
-from screens.artist import Artist
-from screens.artist_list import ArtistList
-from screens.base import BaseScreen
-from screens.go_to_search import GoToSearch
-from screens.main_menu import MainMenu
-from screens.maintenance_mode import MaintenanceScreen
-from screens.search_releases import ArtistSearchResult
+from music_bot.bot.screens.add_artist import ArtistAdd
+from music_bot.bot.screens.admin_panel import AdminPanel
+from music_bot.bot.screens.artist import Artist
+from music_bot.bot.screens.artist_list import ArtistList
+from music_bot.bot.screens.base import BaseScreen
+from music_bot.bot.screens.go_to_search import GoToSearch
+from music_bot.bot.screens.main_menu import MainMenu
+from music_bot.bot.screens.maintenance_mode import MaintenanceScreen
+from music_bot.bot.screens.search_releases import ArtistSearchResult
 
 __all__ = [
     'AdminPanel',

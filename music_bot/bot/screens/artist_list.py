@@ -4,19 +4,19 @@ import json
 import math
 from typing import TYPE_CHECKING, Any
 
-from client.backend_client import API_CLIENT
+from music_bot.bot.client.backend_client import API_CLIENT
 from hammett.conf import settings
 from hammett.core import Button
 from hammett.core.constants import RenderConfig, SourceTypes
 from hammett.core.exceptions import PayloadIsEmpty
-from screens.add_artist import ArtistAdd
-from screens.artist import Artist
-from screens.base import BaseScreen
-from telegram import Update
+from music_bot.bot.screens.add_artist import ArtistAdd
+from music_bot.bot.screens.artist import Artist
+from music_bot.bot.screens.base import BaseScreen
 
 if TYPE_CHECKING:
     from typing import Self
 
+    from telegram import Update
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
@@ -32,7 +32,7 @@ class ArtistList(BaseScreen):
 
     async def get_config(
         self: 'Self',
-        update: Update | None,
+        update: 'Update | None',
         context: 'CallbackContext[BT, UD, CD, BD]',
         **_kwargs: 'Any',
     ) -> RenderConfig:

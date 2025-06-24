@@ -2,16 +2,16 @@
 
 from typing import TYPE_CHECKING
 
-import screens
+import music_bot.bot.screens
 from hammett.conf import settings
 from hammett.core import Button, Screen
 from hammett.core.constants import SourceTypes
-from telegram import Update
 
 if TYPE_CHECKING:
     from typing import Self
 
     from hammett.types import Keyboard
+    from telegram import Update
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
@@ -24,7 +24,7 @@ class BaseScreen(Screen):
     def _get_main_menu_button() -> 'Button':
         return Button(
             '⬅️ В главное меню',
-            source=screens.main_menu.MainMenu,
+            source=music_bot.bot.screens.main_menu.MainMenu,
             source_type=SourceTypes.MOVE_SOURCE_TYPE,
         )
 
@@ -32,13 +32,13 @@ class BaseScreen(Screen):
     def _get_artist_list_button() -> 'Button':
         return Button(
             '⬅️ Назад',
-            source=screens.artist_list.ArtistList,
+            source=music_bot.bot.screens.artist_list.ArtistList,
             source_type=SourceTypes.MOVE_SOURCE_TYPE,
         )
 
     async def add_default_keyboard(
         self: 'Self',
-        _update: Update | None,
+        _update: 'Update | None',
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'Keyboard':
         """Метод добавляет кнопку возврата в главное меню на экран."""
@@ -46,7 +46,7 @@ class BaseScreen(Screen):
 
     async def add_artist_list_keyboard(
         self: 'Self',
-        _update: Update | None,
+        _update: 'Update | None',
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'Keyboard':
         """Метод добавляет кнопку возврата назад."""

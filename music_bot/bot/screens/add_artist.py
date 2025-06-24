@@ -2,19 +2,19 @@
 
 from typing import TYPE_CHECKING
 
-from client.backend_client import API_CLIENT
-from constants import INPUT_STATE
+from music_bot.bot.client.backend_client import API_CLIENT
+from music_bot.bot.constants import INPUT_STATE
 from hammett.conf import settings
 from hammett.core.constants import DEFAULT_STATE, RenderConfig
 from hammett.core.handlers import register_typing_handler
 from hammett.core.mixins import RouteMixin
-from screens.base import BaseScreen
-from telegram import Update
+from music_bot.bot.screens.base import BaseScreen
 
 if TYPE_CHECKING:
     from typing import Self
 
     from hammett.types import Keyboard, State
+    from telegram import Update
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
@@ -34,7 +34,7 @@ class ArtistAdd(BaseScreen, RouteMixin):
     @register_typing_handler
     async def handle_text(
         self: 'Self',
-        update: Update | None,
+        update: 'Update | None',
         context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'State':
         """Обработчик кнопки для записи исполнителей."""
@@ -78,7 +78,7 @@ class ArtistAdd(BaseScreen, RouteMixin):
 
     async def add_default_keyboard(
         self: 'Self',
-        _update: Update | None,
+        _update: 'Update | None',
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'Keyboard':
         """Метод добавляет кнопку возврата в главное меню на экран."""

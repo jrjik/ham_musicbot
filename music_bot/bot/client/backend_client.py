@@ -5,6 +5,7 @@ from http import HTTPStatus
 from typing import Self
 
 import aiohttp
+from music_bot.bot.exceptions import RequestFailed
 from hammett.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -31,33 +32,22 @@ class APIClient:
                     telegram_id,
                     resp.status,
                 )
+
             return []
 
-    async def save_user_artists(
-        self: Self,
-        telegram_id: int,
-        artist_list: list[str],
-    ) -> None:
-        """Сохранить или обновить список артистов пользователя."""
+    async def save_user_artists(self, telegram_id: int, artist_list: list[str]) -> None:
         payload = {'telegram_id': telegram_id, 'items': sorted(set(artist_list))}
         url = f'{self._base_url}/users/{telegram_id}/'
-        async with aiohttp.ClientSession() as session, \
-            session.put(url, json=payload) as resp:
-            if resp.status == HTTPStatus.NOT_FOUND:
-                post_url = f'{self._base_url}/users/'
-                async with session.post(post_url, json=payload) as post_resp:
-                    if post_resp.status not in (HTTPStatus.OK, HTTPStatus.CREATED):
-                        logger.error(
-                            'Ошибка при создании пользователя %s: %s',
-                            telegram_id,
-                            post_resp.status,
-                        )
-            elif resp.status not in (HTTPStatus.OK, HTTPStatus.NO_CONTENT):
-                logger.error(
-                    'Ошибка при обновлении пользователя %s: %s',
-                    telegram_id,
-                    resp.status,
-                )
+
+        async with aiohttp.ClientSession() as session:
+            async with session.put(url, json=payload) as resp:
+                if resp.status == HTTPStatus.NOT_FOUND:
+                    post_url = f'{self._base_url}/users/'
+                    async with session.post(post_url, json=payload) as post_resp:
+                        if post_resp.status not in (HTTPStatus.OK, HTTPStatus.CREATED):
+                            raise RequestFailed(f'Ошибка создания пользователя: {post_resp.status}')
+                elif resp.status not in (HTTPStatus.OK, HTTPStatus.NO_CONTENT):
+                    raise RequestFailed(f'Ошибка обновления пользователя: {resp.status}')
 
     async def get_all_user_ids(self) -> list[int]:
         """Получение всех id пользователей."""

@@ -3,19 +3,19 @@
 import json
 from typing import TYPE_CHECKING
 
-import screens
-from client.backend_client import API_CLIENT
-from client.spotify import SPOTIFY_API_CLIENT
+import music_bot.bot.screens
+from music_bot.bot.client.backend_client import API_CLIENT
+from music_bot.bot.client.spotify import SPOTIFY_API_CLIENT
 from hammett.core import Button
 from hammett.core.constants import DEFAULT_STATE, RenderConfig, SourceTypes
 from hammett.core.handlers import register_button_handler
-from screens.base import BaseScreen
-from telegram import Update
+from music_bot.bot.screens.base import BaseScreen
 
 if TYPE_CHECKING:
     from typing import Any, Self
 
     from hammett.types import State
+    from telegram import Update
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
@@ -59,7 +59,7 @@ class Artist(BaseScreen):
                 [
                     Button(
                         '⬅️ Назад к списку',
-                        screens.artist_list.ArtistList,
+                        music_bot.bot.screens.artist_list.ArtistList,
                         source_type=SourceTypes.MOVE_SOURCE_TYPE,
                         payload=json.dumps({'page': page}),
                     ),
@@ -71,7 +71,7 @@ class Artist(BaseScreen):
     @register_button_handler
     async def _delete_artist(
         self: 'Self',
-        update: Update | None,
+        update: 'Update | None',
         context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'State':
         """Метод для удаления артиста из списка."""
@@ -89,6 +89,4 @@ class Artist(BaseScreen):
             current_list.remove(artist_name)
             await API_CLIENT.save_user_artists(user_id, current_list)
 
-        return await screens.artist_list.ArtistList().move(update,
-                                                           context,
-                                                           payload=json.dumps({'page': page}))
+        return await music_bot.bot.screens.artist_list.ArtistList().move(update,context,payload=json.dumps({'page': page}))

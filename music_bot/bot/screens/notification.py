@@ -1,16 +1,18 @@
 """Модуль содержит реализацию уведомления, отправляемого по расписанию."""
 
 import logging
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from aiohttp import ClientResponseError
-from client.backend_client import API_CLIENT
-from client.spotify import SPOTIFY_API_CLIENT
+from music_bot.bot.client.backend_client import API_CLIENT
+from music_bot.bot.client.spotify import SPOTIFY_API_CLIENT
 from hammett.core.constants import RenderConfig
 from hammett.core.screen import DEFAULT_STATE
 from hammett.types import State
-from screens import BaseScreen
-from telegram.ext import CallbackContext
+from music_bot.bot.screens import BaseScreen
+
+if TYPE_CHECKING:
+    from telegram.ext import CallbackContext
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +21,7 @@ class FridayNotification(BaseScreen):
     """Экран для отправки уведомлений о релизах."""
 
 
-async def send_friday_releases_notification(context: CallbackContext[Any, Any, Any, Any]) -> State:
+async def send_friday_releases_notification(context: 'CallbackContext[Any, Any, Any, Any]') -> State:
     """Задача для отправки уведомлений каждую пятницу."""
     user_ids = await API_CLIENT.get_all_user_ids()
     if not user_ids:

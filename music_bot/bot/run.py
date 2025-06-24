@@ -1,4 +1,5 @@
 """Модуль для запуска бота."""
+from bot import error_handler
 from constants import INPUT_STATE
 from hammett.core import Bot
 from hammett.core.constants import DEFAULT_STATE
@@ -22,6 +23,7 @@ def main() -> None:
         'Ham_MusicBot',
         entry_point=MainMenu,
         persistence=RedisPersistence(),
+        error_handlers=[error_handler],
         states={
             DEFAULT_STATE: {
                 MainMenu,
@@ -44,13 +46,13 @@ def main() -> None:
                     'minute': 5,
                 },
             },
-            {
-                'callback': send_friday_releases_notification,
-                'job_kwargs': {
-                    'trigger': 'interval',
-                    'seconds': 15,
-                },
-            },
+            # {
+            #     'callback': send_friday_releases_notification,
+            #     'job_kwargs': {
+            #         'trigger': 'interval',
+            #         'seconds': 15,
+            #     },
+            # },
         ],
     )
     bot.run()

@@ -7,13 +7,13 @@ from hammett.core import Button
 from hammett.core.constants import SourceTypes
 from hammett.core.hider import ONLY_FOR_ADMIN, Hider
 from hammett.core.mixins import StartMixin
-from screens import admin_panel, artist_list, go_to_search
-from telegram import Update
+from music_bot.bot.screens import admin_panel, artist_list, go_to_search
 
 if TYPE_CHECKING:
     from typing import Self
 
     from hammett.types import Keyboard
+    from telegram import Update
     from telegram.ext import CallbackContext
     from telegram.ext._utils.types import BD, BT, CD, UD
 
@@ -39,7 +39,7 @@ class MainMenu(StartMixin):
 
     async def add_default_keyboard(
         self: 'Self',
-        _update: Update | None,
+        _update: 'Update | None',
         _context: 'CallbackContext[BT, UD, CD, BD]',
     ) -> 'Keyboard':
         """Метод добавляет клавиатуру с кнопками на экран."""
